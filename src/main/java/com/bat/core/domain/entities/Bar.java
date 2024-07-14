@@ -1,6 +1,7 @@
 package com.bat.core.domain.entities;
 
 import java.math.BigDecimal;
+import java.time.Duration;
 import java.time.Instant;
 import java.util.UUID;
 
@@ -128,5 +129,8 @@ import lombok.ToString;
             throw new BarException("Open time cannot be after close time");
         if (this.low.compareTo(this.high) > 0)
             throw new BarException("Low cannot be greater than high");
+        long durationInMinutes = Duration.between(this.openTime, this.closeTime).toMinutes();
+        if (durationInMinutes > this.timeFrame.getMinutes())
+            throw new BarException("Time duration cannot exceed time frame (" + this.timeFrame.getMinutes() + " minutes)");
     }
 }

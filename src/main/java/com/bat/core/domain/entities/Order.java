@@ -2,6 +2,7 @@ package com.bat.core.domain.entities;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -40,6 +41,7 @@ import com.bat.core.domain.exceptions.OrderValidationException;
  */
 @Getter
 @Setter
+@ToString
 abstract public class Order {
 
 

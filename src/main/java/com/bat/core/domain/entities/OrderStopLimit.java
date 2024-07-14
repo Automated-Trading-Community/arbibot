@@ -6,6 +6,9 @@ import java.util.List;
 
 import com.bat.core.domain.exceptions.OrderValidationException;
 
+import lombok.Getter;
+import lombok.Setter;
+
 /**
  * Class representing a stop-limit order in the trading system.
  * <p>
@@ -45,6 +48,8 @@ import com.bat.core.domain.exceptions.OrderValidationException;
  * @author SChoumiloff
  * @since 1.0
  */
+@Getter
+@Setter
 public class OrderStopLimit extends Order {
 
     private BigDecimal limitPrice;

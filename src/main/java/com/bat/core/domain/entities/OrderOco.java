@@ -95,10 +95,23 @@ public class OrderOco extends Order {
             List<BigDecimal> filledQuantity,
             Asset feeAsset,
             BigDecimal fees,
-            OrderStopLimit secondaryOrder,
-            OrderLimit primaryOrder) {
+            OrderLimit primaryOrder,
+            OrderStopLimit secondaryOrder) {
         super(brokerId, action, type, tradingPair, orderCreationTimestamp, orderOpenTimestamp, orderFilledTimestamp,
                 orderCanceledTimestamp, fees, filledPrice, filledQuantity, feeAsset, fees);
+
+        if (this.primaryOrder.getStatus().equals(OrderStatus.CANCELED)
+                && this.secondaryOrder.getStatus().equals(OrderStatus.EXECUTED))
+            this.setQuantity(this.secondaryOrder.getQuantity());
+        if (this.secondaryOrder.getStatus().equals(OrderStatus.CANCELED)
+                && this.primaryOrder.getStatus().equals(OrderStatus.EXECUTED))
+            this.setQuantity(this.primaryOrder.getQuantity());
+        if (this.secondaryOrder.getStatus().equals(OrderStatus.OPEN)
+                && this.primaryOrder.getStatus().equals(OrderStatus.OPEN))
+            this.setQuantity(null);
+        if (this.secondaryOrder.getStatus().equals(OrderStatus.CANCELED)
+                && this.primaryOrder.getStatus().equals(OrderStatus.CANCELED))
+            this.setQuantity(null);
         this.secondaryOrder = secondaryOrder;
         this.primaryOrder = primaryOrder;
     }
@@ -119,6 +132,7 @@ public class OrderOco extends Order {
             OrderStopLimit secondaryOrder,
             OrderLimit primaryOrder) {
         super(action, tradingPair, quantity);
+        this.setQuantity(null);
         this.secondaryOrder = secondaryOrder;
         this.primaryOrder = primaryOrder;
     }
@@ -129,11 +143,12 @@ public class OrderOco extends Order {
             throw new OrderValidationException("Primary and secondary orders must have the same action");
         if (!this.primaryOrder.getTradingPair().equals(secondaryOrder.getTradingPair()))
             throw new OrderValidationException("Primary and secondary orders must have the same trading pair");
-        if (this.primaryOrder.getStatus().equals(OrderStatus.CANCELED) && this.secondaryOrder.getStatus().equals(OrderStatus.EXECUTED))
-            throw new OrderValidationException("Primary and secondary orders cannot be both canceled and executed at the same time");
-        if (this.primaryOrder.getStatus().equals(OrderStatus.OPEN) && !this.secondaryOrder.getStatus().equals(OrderStatus.OPEN))
+        if (this.primaryOrder.getStatus().equals(OrderStatus.OPEN)
+                && !this.secondaryOrder.getStatus().equals(OrderStatus.OPEN))
             throw new OrderValidationException("Primary order cannot be open while secondary not");
-        if (this.secondaryOrder.getStatus().equals(OrderStatus.OPEN) && !this.primaryOrder.getStatus().equals(OrderStatus.OPEN))
+
+        if (this.secondaryOrder.getStatus().equals(OrderStatus.OPEN)
+                && !this.primaryOrder.getStatus().equals(OrderStatus.OPEN))
             throw new OrderValidationException("Secondary order cannot be open while primary not");
     }
 

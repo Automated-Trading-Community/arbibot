@@ -5,6 +5,8 @@ import lombok.Setter;
 
 import java.util.UUID;
 
+import com.bat.core.domain.exceptions.PairException;
+
 /**
  * The {@code Pair} class represents a trading pair consisting of two financial assets.
  * A trading pair is used to express the value of one asset relative to another.
@@ -34,7 +36,7 @@ import java.util.UUID;
 @Setter
 public class Pair {
 
-    private final UUID id;
+    private final UUID id = UUID.randomUUID();
 
     private Asset baseAsset;
     private Asset quoteAsset;
@@ -47,9 +49,12 @@ public class Pair {
      * @param quoteAsset the asset in which the value of the base asset is quoted
      */
     private Pair(Asset baseAsset, Asset quoteAsset) {
-        this.id = UUID.randomUUID();
+        if (baseAsset.getName().equalsIgnoreCase(quoteAsset.getName())) {
+            throw new PairException("Base asset and quote asset must be differents.");
+        }
         this.baseAsset = baseAsset;
         this.quoteAsset = quoteAsset;
+
     }
 
     /**
