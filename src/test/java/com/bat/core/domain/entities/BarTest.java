@@ -1,5 +1,7 @@
 package com.bat.core.domain.entities;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.math.BigDecimal;
@@ -25,10 +27,9 @@ public class BarTest {
                 TimeFrame.ONE_HOUR,
                 Instant.parse("2023-01-01T10:00:00Z"),
                 Instant.parse("2023-01-01T11:00:00Z"),
-                btcUsdPair
-        );
+                btcUsdPair);
 
-        validBar.validateBar();  // Should not throw any exception
+        validBar.validateBar(); // Should not throw any exception
     }
 
     @Test
@@ -45,8 +46,7 @@ public class BarTest {
                 TimeFrame.ONE_HOUR,
                 Instant.parse("2023-01-01T12:00:00Z"),
                 Instant.parse("2023-01-01T11:00:00Z"),
-                btcUsdPair
-        );
+                btcUsdPair);
 
         assertThrows(BarException.class, invalidBar::validateBar, "Open time cannot be after close time");
     }
@@ -65,8 +65,7 @@ public class BarTest {
                 TimeFrame.ONE_HOUR,
                 Instant.parse("2023-01-01T10:00:00Z"),
                 Instant.parse("2023-01-01T11:00:00Z"),
-                btcUsdPair
-        );
+                btcUsdPair);
 
         assertThrows(BarException.class, invalidBar::validateBar, "Low cannot be greater than high");
     }
@@ -85,9 +84,34 @@ public class BarTest {
                 TimeFrame.ONE_HOUR,
                 Instant.parse("2023-01-01T10:00:00Z"),
                 Instant.parse("2023-01-01T12:00:00Z"),
-                btcUsdPair
-        );
+                btcUsdPair);
 
-        assertThrows(BarException.class, invalidBar::validateBar, "Time duration cannot exceed time frame (" + invalidBar.getTimeFrame().getMinutes() + " minutes)");
+        assertThrows(BarException.class, invalidBar::validateBar,
+                "Time duration cannot exceed time frame (" + invalidBar.getTimeFrame().getMinutes() + " minutes)");
+    }
+
+    @Test
+    public void testSecondConstructor() {
+        Asset btc = Asset.create("BTC");
+        Asset usd = Asset.create("USD");
+        Pair btcUsdPair = Pair.create(btc, usd);
+
+        BigDecimal openPrice = new BigDecimal("50000");
+        TimeFrame timeFrame = TimeFrame.ONE_HOUR;
+        Instant openTime = Instant.parse("2023-01-01T10:00:00Z");
+        Instant closeTime = Instant.parse("2023-01-01T11:00:00Z");
+
+        Bar bar = new Bar(openPrice, btcUsdPair, timeFrame, openTime, closeTime);
+
+        // Vérifie que toutes les valeurs sont correctement initialisées
+        assertEquals(openPrice, bar.getOpen());
+        assertEquals(openPrice, bar.getClose());
+        assertEquals(openPrice, bar.getHigh());
+        assertEquals(openPrice, bar.getLow());
+        assertEquals(timeFrame, bar.getTimeFrame());
+        assertEquals(openTime, bar.getOpenTime());
+        assertEquals(closeTime, bar.getCloseTime());
+        assertEquals(btcUsdPair, bar.getBarPair());
+        assertNotNull(bar.getId()); // Vérifie que l'ID a été généré
     }
 }

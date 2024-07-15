@@ -44,8 +44,9 @@ class OrderLimitTest {
         BigDecimal fees = BigDecimal.valueOf(10);
         BigDecimal limitPrice = BigDecimal.valueOf(35000);
 
-        OrderLimit order = new OrderLimit(brokerId, action, type, tradingPair, creationTime, openTime, filledTime, canceledTime,
-                                          quantity, filledPrice, filledQuantity, feeAsset, fees, limitPrice);
+        OrderLimit order = new OrderLimit(brokerId, action, type, tradingPair, creationTime, openTime, filledTime,
+                canceledTime,
+                quantity, filledPrice, filledQuantity, feeAsset, fees, limitPrice);
 
         assertEquals(brokerId, order.getBrokerId());
         assertEquals(action, order.getAction());
@@ -101,5 +102,14 @@ class OrderLimitTest {
         OrderLimit order = new OrderLimit(actionBuy, tradingPair, quantity, limitPrice);
 
         assertDoesNotThrow(() -> order.validateOrder());
+    }
+
+    @Test
+    void testValidateOrder_TypeNull() {
+        BigDecimal quantity = BigDecimal.valueOf(1.0);
+        OrderLimit order = new OrderLimit(null, tradingPair, quantity, BigDecimal.ZERO);
+
+        OrderValidationException exception = assertThrows(OrderValidationException.class, () -> order.validateOrder());
+        assertEquals("limitPrice cannot be null or zero", exception.getMessage());
     }
 }

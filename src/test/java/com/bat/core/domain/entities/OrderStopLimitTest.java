@@ -43,8 +43,9 @@ class OrderStopLimitTest {
         BigDecimal limitPrice = BigDecimal.valueOf(35000);
         BigDecimal stopPrice = BigDecimal.valueOf(34000);
 
-        OrderStopLimit order = new OrderStopLimit(brokerId, actionBuy, type, tradingPair, creationTime, openTime, filledTime, canceledTime,
-                                                  quantity, filledPrice, filledQuantity, feeAsset, fees, limitPrice, stopPrice);
+        OrderStopLimit order = new OrderStopLimit(brokerId, actionBuy, type, tradingPair, creationTime, openTime,
+                filledTime, canceledTime,
+                quantity, filledPrice, filledQuantity, feeAsset, fees, limitPrice, stopPrice);
 
         assertEquals(brokerId, order.getBrokerId());
         assertEquals(actionBuy, order.getAction());
@@ -90,7 +91,8 @@ class OrderStopLimitTest {
     @Test
     void testValidateOrder_ThrowsExceptionForZeroLimitPrice() {
         BigDecimal quantity = BigDecimal.valueOf(1.0);
-        OrderStopLimit order = new OrderStopLimit(actionBuy, tradingPair, quantity, BigDecimal.ZERO, BigDecimal.valueOf(34000));
+        OrderStopLimit order = new OrderStopLimit(actionBuy, tradingPair, quantity, BigDecimal.ZERO,
+                BigDecimal.valueOf(34000));
 
         OrderValidationException exception = assertThrows(OrderValidationException.class, () -> order.validateOrder());
         assertEquals("limitPrice cannot be null or zero", exception.getMessage());
@@ -108,7 +110,8 @@ class OrderStopLimitTest {
     @Test
     void testValidateOrder_ThrowsExceptionForZeroStopPrice() {
         BigDecimal quantity = BigDecimal.valueOf(1.0);
-        OrderStopLimit order = new OrderStopLimit(actionBuy, tradingPair, quantity, BigDecimal.valueOf(35000), BigDecimal.ZERO);
+        OrderStopLimit order = new OrderStopLimit(actionBuy, tradingPair, quantity, BigDecimal.valueOf(35000),
+                BigDecimal.ZERO);
 
         OrderValidationException exception = assertThrows(OrderValidationException.class, () -> order.validateOrder());
         assertEquals("limitPrice cannot be null or zero", exception.getMessage());

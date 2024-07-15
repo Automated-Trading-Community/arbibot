@@ -124,10 +124,8 @@ public class OrderStopLimit extends Order {
             throw new OrderValidationException("limitPrice cannot be null or zero");
         if (this.getAction().equals(OrderAction.BUY))
             this.validateBuyOrder();
-        else if (this.getAction().equals(OrderAction.SELL))
+        if (this.getAction().equals(OrderAction.SELL))
             this.validateSellOrder();
-        else
-            throw new OrderValidationException("Invalid order action");
     }
 
     @Override

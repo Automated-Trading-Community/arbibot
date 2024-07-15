@@ -100,6 +100,9 @@ public class OrderOco extends Order {
         super(brokerId, action, type, tradingPair, orderCreationTimestamp, orderOpenTimestamp, orderFilledTimestamp,
                 orderCanceledTimestamp, fees, filledPrice, filledQuantity, feeAsset, fees);
 
+        this.primaryOrder = primaryOrder;
+        this.secondaryOrder = secondaryOrder;
+
         if (this.primaryOrder.getStatus().equals(OrderStatus.CANCELED)
                 && this.secondaryOrder.getStatus().equals(OrderStatus.EXECUTED))
             this.setQuantity(this.secondaryOrder.getQuantity());

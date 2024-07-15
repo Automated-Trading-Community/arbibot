@@ -2,6 +2,7 @@ package com.bat.core.domain.entities;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.math.BigDecimal;
@@ -44,8 +45,7 @@ public class OrderOcoTest {
                 btc,
                 new BigDecimal("0.1"),
                 new BigDecimal("50000"),
-                new BigDecimal("51000")
-        );
+                new BigDecimal("51000"));
 
         limitOrderBuy = new OrderLimit(
                 "broker1",
@@ -61,16 +61,14 @@ public class OrderOcoTest {
                 Arrays.asList(new BigDecimal("1.0")),
                 btc,
                 new BigDecimal("0.1"),
-                new BigDecimal("49000")
-        );
+                new BigDecimal("49000"));
 
         orderOcoBuy = new OrderOco(
                 OrderAction.BUY,
                 btcUsdPair,
                 new BigDecimal("1.0"),
                 stopLimitOrderBuy,
-                limitOrderBuy
-        );
+                limitOrderBuy);
 
         stopLimitOrderSell = new OrderStopLimit(
                 "broker2",
@@ -87,8 +85,7 @@ public class OrderOcoTest {
                 btc,
                 new BigDecimal("0.1"),
                 new BigDecimal("51000"),
-                new BigDecimal("50000")
-        );
+                new BigDecimal("50000"));
 
         limitOrderSell = new OrderLimit(
                 "broker2",
@@ -104,16 +101,14 @@ public class OrderOcoTest {
                 Arrays.asList(new BigDecimal("1.0")),
                 btc,
                 new BigDecimal("0.1"),
-                new BigDecimal("51000")
-        );
+                new BigDecimal("51000"));
 
         orderOcoSell = new OrderOco(
                 OrderAction.SELL,
                 btcUsdPair,
                 new BigDecimal("1.0"),
                 stopLimitOrderSell,
-                limitOrderSell
-        );
+                limitOrderSell);
     }
 
     @Test
@@ -254,5 +249,249 @@ public class OrderOcoTest {
     @Test
     public void testValidateSellOrder() throws OrderValidationException {
         orderOcoSell.validateSellOrder();
+    }
+
+    @Test
+    public void testConstructorPrimaryCanceledSecondaryExecuted() {
+        Asset btc = Asset.create("BTC");
+        Asset usd = Asset.create("USD");
+        Pair btcUsdPair = Pair.create(btc, usd);
+
+        OrderStopLimit stopLimitOrder = new OrderStopLimit(
+                "broker1",
+                OrderAction.BUY,
+                OrderType.STOP_LIMIT,
+                btcUsdPair,
+                Instant.now(),
+                Instant.now(),
+                Instant.now(),
+                Instant.now(),
+                new BigDecimal("1.0"),
+                Arrays.asList(new BigDecimal("50000")),
+                Arrays.asList(new BigDecimal("1.0")),
+                btc,
+                new BigDecimal("0.1"),
+                new BigDecimal("50000"),
+                new BigDecimal("51000"));
+        stopLimitOrder.setStatus(OrderStatus.EXECUTED);
+
+        OrderLimit limitOrder = new OrderLimit(
+                "broker1",
+                OrderAction.BUY,
+                OrderType.LIMIT,
+                btcUsdPair,
+                Instant.now(),
+                Instant.now(),
+                null,
+                null,
+                new BigDecimal("1.0"),
+                Arrays.asList(new BigDecimal("49000")),
+                Arrays.asList(new BigDecimal("1.0")),
+                btc,
+                new BigDecimal("0.1"),
+                new BigDecimal("49000"));
+        limitOrder.setStatus(OrderStatus.CANCELED);
+
+        OrderOco orderOco = new OrderOco(
+                "broker1",
+                OrderAction.BUY,
+                OrderType.OCO,
+                btcUsdPair,
+                Instant.now(),
+                Instant.now(),
+                Instant.now(),
+                Instant.now(),
+                new BigDecimal("1.0"),
+                Arrays.asList(new BigDecimal("50000")),
+                Arrays.asList(new BigDecimal("1.0")),
+                btc,
+                new BigDecimal("0.1"),
+                limitOrder,
+                stopLimitOrder);
+
+        assertEquals(stopLimitOrder.getQuantity(), orderOco.getQuantity());
+    }
+
+    @Test
+    public void testConstructorSecondaryCanceledPrimaryExecuted() {
+        Asset btc = Asset.create("BTC");
+        Asset usd = Asset.create("USD");
+        Pair btcUsdPair = Pair.create(btc, usd);
+
+        OrderStopLimit stopLimitOrder = new OrderStopLimit(
+                "broker1",
+                OrderAction.BUY,
+                OrderType.STOP_LIMIT,
+                btcUsdPair,
+                Instant.now(),
+                Instant.now(),
+                Instant.now(),
+                Instant.now(),
+                new BigDecimal("1.0"),
+                Arrays.asList(new BigDecimal("50000")),
+                Arrays.asList(new BigDecimal("1.0")),
+                btc,
+                new BigDecimal("0.1"),
+                new BigDecimal("50000"),
+                new BigDecimal("51000"));
+        stopLimitOrder.setStatus(OrderStatus.CANCELED);
+
+        OrderLimit limitOrder = new OrderLimit(
+                "broker1",
+                OrderAction.BUY,
+                OrderType.LIMIT,
+                btcUsdPair,
+                Instant.now(),
+                Instant.now(),
+                Instant.now(),
+                Instant.now(),
+                new BigDecimal("1.0"),
+                Arrays.asList(new BigDecimal("49000")),
+                Arrays.asList(new BigDecimal("1.0")),
+                btc,
+                new BigDecimal("0.1"),
+                new BigDecimal("49000"));
+        limitOrder.setStatus(OrderStatus.EXECUTED);
+
+        OrderOco orderOco = new OrderOco(
+                "broker1",
+                OrderAction.BUY,
+                OrderType.OCO,
+                btcUsdPair,
+                Instant.now(),
+                Instant.now(),
+                Instant.now(),
+                Instant.now(),
+                new BigDecimal("1.0"),
+                Arrays.asList(new BigDecimal("50000")),
+                Arrays.asList(new BigDecimal("1.0")),
+                btc,
+                new BigDecimal("0.1"),
+                limitOrder,
+                stopLimitOrder);
+
+        assertEquals(limitOrder.getQuantity(), orderOco.getQuantity());
+    }
+
+    @Test
+    public void testConstructorBothOrdersOpen() {
+        Asset btc = Asset.create("BTC");
+        Asset usd = Asset.create("USD");
+        Pair btcUsdPair = Pair.create(btc, usd);
+
+        OrderStopLimit stopLimitOrder = new OrderStopLimit(
+                "broker1",
+                OrderAction.BUY,
+                OrderType.STOP_LIMIT,
+                btcUsdPair,
+                Instant.now(),
+                Instant.now(),
+                null,
+                null,
+                new BigDecimal("1.0"),
+                Arrays.asList(new BigDecimal("50000")),
+                Arrays.asList(new BigDecimal("1.0")),
+                btc,
+                new BigDecimal("0.1"),
+                new BigDecimal("50000"),
+                new BigDecimal("51000"));
+        stopLimitOrder.setStatus(OrderStatus.OPEN);
+
+        OrderLimit limitOrder = new OrderLimit(
+                "broker1",
+                OrderAction.BUY,
+                OrderType.LIMIT,
+                btcUsdPair,
+                Instant.now(),
+                Instant.now(),
+                null,
+                null,
+                new BigDecimal("1.0"),
+                Arrays.asList(new BigDecimal("49000")),
+                Arrays.asList(new BigDecimal("1.0")),
+                btc,
+                new BigDecimal("0.1"),
+                new BigDecimal("49000"));
+        limitOrder.setStatus(OrderStatus.OPEN);
+
+        OrderOco orderOco = new OrderOco(
+                "broker1",
+                OrderAction.BUY,
+                OrderType.OCO,
+                btcUsdPair,
+                Instant.now(),
+                Instant.now(),
+                null,
+                null,
+                new BigDecimal("1.0"),
+                Arrays.asList(new BigDecimal("50000")),
+                Arrays.asList(new BigDecimal("1.0")),
+                btc,
+                new BigDecimal("0.1"),
+                limitOrder,
+                stopLimitOrder);
+
+        assertNull(orderOco.getQuantity());
+    }
+
+    @Test
+    public void testConstructorBothOrdersCanceled() {
+        Asset btc = Asset.create("BTC");
+        Asset usd = Asset.create("USD");
+        Pair btcUsdPair = Pair.create(btc, usd);
+
+        OrderStopLimit stopLimitOrder = new OrderStopLimit(
+                "broker1",
+                OrderAction.BUY,
+                OrderType.STOP_LIMIT,
+                btcUsdPair,
+                Instant.now(),
+                Instant.now(),
+                Instant.now(),
+                Instant.now(),
+                new BigDecimal("1.0"),
+                Arrays.asList(new BigDecimal("50000")),
+                Arrays.asList(new BigDecimal("1.0")),
+                btc,
+                new BigDecimal("0.1"),
+                new BigDecimal("50000"),
+                new BigDecimal("51000"));
+        stopLimitOrder.setStatus(OrderStatus.CANCELED);
+
+        OrderLimit limitOrder = new OrderLimit(
+                "broker1",
+                OrderAction.BUY,
+                OrderType.LIMIT,
+                btcUsdPair,
+                Instant.now(),
+                Instant.now(),
+                Instant.now(),
+                Instant.now(),
+                new BigDecimal("1.0"),
+                Arrays.asList(new BigDecimal("49000")),
+                Arrays.asList(new BigDecimal("1.0")),
+                btc,
+                new BigDecimal("0.1"),
+                new BigDecimal("49000"));
+        limitOrder.setStatus(OrderStatus.CANCELED);
+
+        OrderOco orderOco = new OrderOco(
+                "broker1",
+                OrderAction.BUY,
+                OrderType.OCO,
+                btcUsdPair,
+                Instant.now(),
+                Instant.now(),
+                Instant.now(),
+                Instant.now(),
+                new BigDecimal("1.0"),
+                Arrays.asList(new BigDecimal("50000")),
+                Arrays.asList(new BigDecimal("1.0")),
+                btc,
+                new BigDecimal("0.1"),
+                limitOrder,
+                stopLimitOrder);
+
+        assertNull(orderOco.getQuantity());
     }
 }
