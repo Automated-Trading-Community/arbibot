@@ -2,13 +2,17 @@ package com.bat.core.domain.exceptions;
 
 /**
  * The {@code BarException} class represents an exception that is thrown
- * when an error occurs during the processing of create or update operations on a bar. 
+ * when an error occurs during the processing of create or update operations on
+ * a bar.
  * <p>
- * This exception is used to indicate specific validation errors that occur during the order validation process.
- * It extends the {@code Exception} class and provides a constructor to create an instance with a custom error message.
+ * This exception is used to indicate specific validation errors that occur
+ * during the order validation process.
+ * It extends the {@code Exception} class and provides a constructor to create
+ * an instance with a custom error message.
  * </p>
  * <p>
  * Example usage:
+ * 
  * <pre>
  * {@code
  * try {
@@ -19,7 +23,6 @@ package com.bat.core.domain.exceptions;
  * }
  * }
  * </pre>
- * </p>
  *
  * @see com.bat.core.domain.entities.Bar#validateBar()
  * @author SChoumiloff

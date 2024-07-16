@@ -24,7 +24,6 @@ package com.bat.core.domain.exceptions;
  * }
  * }
  * </pre>
- * </p>
  *
  * @see com.bat.core.domain.entities.Order#validateOrder()
  * 

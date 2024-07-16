@@ -3,7 +3,8 @@ package com.bat.core.domain.exceptions;
 /**
  * The {@code PairException} class represents an exception that is
  * thrown
- * when an error occurs during the initialization or use of a {@code Pair} object
+ * when an error occurs during the initialization or use of a {@code Pair}
+ * object
  * <p>
  * This exception is used to indicate specific validation errors that occur
  * during the order validation process.
@@ -23,7 +24,6 @@ package com.bat.core.domain.exceptions;
  * }
  * }
  * </pre>
- * </p>
  *
  * @see com.bat.core.domain.entities.Pair
  * 
