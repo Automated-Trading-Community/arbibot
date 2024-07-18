@@ -59,8 +59,8 @@ import lombok.ToString;
 @ToString
 public class OrderOco extends Order {
 
-    private OrderStopLimit secondaryOrder;
     private OrderLimit primaryOrder;
+    private OrderStopLimit secondaryOrder;
 
     /**
      * Constructor with all attributes except for the UUID identifier.

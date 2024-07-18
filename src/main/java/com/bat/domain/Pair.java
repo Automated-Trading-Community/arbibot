@@ -40,6 +40,17 @@ import com.bat.domain.exceptions.PairException;
 @Getter
 @Setter
 public class Pair {
+    /**
+     * Static factory method to create a {@code Pair} instance.
+     * This method ensures the {@code id} is auto-generated internally.
+     *
+     * @param baseAsset  the base asset
+     * @param quoteAsset the quote asset
+     * @return a new {@code Pair} instance with a unique ID and specified assets
+     */
+    public static Pair create(Asset baseAsset, Asset quoteAsset) {
+        return new Pair(baseAsset, quoteAsset);
+    }
 
     private final UUID id = UUID.randomUUID();
 
@@ -60,17 +71,5 @@ public class Pair {
         this.baseAsset = baseAsset;
         this.quoteAsset = quoteAsset;
 
-    }
-
-    /**
-     * Static factory method to create a {@code Pair} instance.
-     * This method ensures the {@code id} is auto-generated internally.
-     *
-     * @param baseAsset  the base asset
-     * @param quoteAsset the quote asset
-     * @return a new {@code Pair} instance with a unique ID and specified assets
-     */
-    public static Pair create(Asset baseAsset, Asset quoteAsset) {
-        return new Pair(baseAsset, quoteAsset);
     }
 }
