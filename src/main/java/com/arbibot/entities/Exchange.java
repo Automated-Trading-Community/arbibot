@@ -1,10 +1,10 @@
-package com.arbibot.domain;
+package com.arbibot.entities;
 
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import com.arbibot.domain.exceptions.ExchangeException;
+import com.arbibot.exceptions.ExchangeException;
 
 import lombok.Getter;
 import lombok.Setter;

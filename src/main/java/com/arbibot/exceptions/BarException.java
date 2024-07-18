@@ -1,4 +1,4 @@
-package com.arbibot.domain.exceptions;
+package com.arbibot.exceptions;
 
 /**
  * The {@code BarException} class represents an exception that is thrown
@@ -24,7 +24,7 @@ package com.arbibot.domain.exceptions;
  * }
  * </pre>
  *
- * @see com.bat.core.domain.entities.Bar#validateBar()
+ * @see com.bat.core.entities.Bar#validateBar()
  * @author SChoumiloff
  * @since 1.0
  */

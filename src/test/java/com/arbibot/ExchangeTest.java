@@ -1,9 +1,13 @@
-package com.arbibot.domain;
+package com.arbibot;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import com.arbibot.domain.exceptions.ExchangeException;
+import com.arbibot.exceptions.ExchangeException;
+import com.arbibot.entities.Asset;
+import com.arbibot.entities.Exchange;
+import com.arbibot.entities.ExchangeType;
+import com.arbibot.entities.Pair;
 
 import static org.junit.jupiter.api.Assertions.*;
 

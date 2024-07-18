@@ -1,4 +1,4 @@
-package com.arbibot.domain;
+package com.arbibot.entities;
 
 import lombok.Getter;
 import lombok.Setter;

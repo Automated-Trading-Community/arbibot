@@ -1,4 +1,4 @@
-package com.arbibot.domain.exceptions;
+package com.arbibot.exceptions;
 
 /**
  * The {@code PairException} class represents an exception that is
@@ -25,7 +25,7 @@ package com.arbibot.domain.exceptions;
  * }
  * </pre>
  *
- * @see com.bat.domain.entities.Pair
+ * @see com.arbibot.entities.bat.entities.Pair
  * 
  * @author SChoumiloff
  * @since 1.0

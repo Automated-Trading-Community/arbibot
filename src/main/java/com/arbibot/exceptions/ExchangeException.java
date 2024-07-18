@@ -1,4 +1,4 @@
-package com.arbibot.domain.exceptions;
+package com.arbibot.exceptions;
 
 /**
  * The {@code ExchangeException} class represents an exception that is
@@ -13,7 +13,7 @@ package com.arbibot.domain.exceptions;
  * </p>
  * <p>
  *
- * @see com.bat.domain.entities.Exchange
+ * @see com.arbibot.entities.bat.entities.Exchange
  * 
  * @author SChoumiloff
  * @since 1.0

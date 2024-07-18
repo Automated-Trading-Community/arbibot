@@ -1,4 +1,4 @@
-package com.arbibot.domain;
+package com.arbibot.entities;
 
 /**
  * Enum representing the type of cryptocurrency exchange.
