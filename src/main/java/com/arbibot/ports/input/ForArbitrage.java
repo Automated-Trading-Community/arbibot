@@ -1,11 +1,9 @@
-package com.arbibot.port.input;
-
-import com.arbibot.entities.ArbitrageInfo;
+package com.arbibot.ports.input;
 
 /**
- * 
+ * Super interface qui ne va pas être implémenter directement.
  */
-public interface Arbitrage {
+public interface ForArbitrage {
 
     /**
      * Indicates whether the arbitrage action is potentially profitable. 
@@ -20,11 +18,4 @@ public interface Arbitrage {
      * @return {@code boolean}
      */
     boolean canArbitrate();
-
-    /**
-     * Execute arbitrage.
-     * 
-     * @param arbitrageInfo
-     */
-    void arbitrate(ArbitrageInfo arbitrageInfo);
 }
