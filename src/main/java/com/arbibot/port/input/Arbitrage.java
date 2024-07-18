@@ -1,4 +1,4 @@
-package com.arbibot.port.api;
+package com.arbibot.port.input;
 
 import com.arbibot.entities.ArbitrageInfo;
 
