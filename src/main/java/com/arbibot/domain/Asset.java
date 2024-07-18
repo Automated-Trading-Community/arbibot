@@ -40,6 +40,16 @@ import java.util.UUID;
 @Getter
 @Setter
 public class Asset {
+    /**
+     * Static factory method to create an {@code Asset} instance.
+     * This method ensures the {@code id} is auto-generated internally.
+     *
+     * @param name the name of the asset
+     * @return a new {@code Asset} instance with a unique ID and specified name
+     */
+    public static Asset create(String name) {
+        return new Asset(name);
+    }
 
     private final UUID id = UUID.randomUUID();
 
@@ -56,14 +66,5 @@ public class Asset {
         this.name = name;
     }
 
-    /**
-     * Static factory method to create an {@code Asset} instance.
-     * This method ensures the {@code id} is auto-generated internally.
-     *
-     * @param name the name of the asset
-     * @return a new {@code Asset} instance with a unique ID and specified name
-     */
-    public static Asset create(String name) {
-        return new Asset(name);
-    }
+    
 }
