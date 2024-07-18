@@ -1,4 +1,4 @@
-package com.bat.domain;
+package com.arbibot.domain;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.Test;
 
-import com.bat.domain.exceptions.PairException;
+import com.arbibot.domain.exceptions.PairException;
 
 public class PairTest {
 

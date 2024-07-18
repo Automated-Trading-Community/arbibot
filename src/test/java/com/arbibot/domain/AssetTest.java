@@ -1,4 +1,4 @@
-package com.bat.domain;
+package com.arbibot.domain;
 
 import org.junit.jupiter.api.Test;
 

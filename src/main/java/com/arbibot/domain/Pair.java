@@ -1,11 +1,11 @@
-package com.bat.domain;
+package com.arbibot.domain;
 
 import lombok.Getter;
 import lombok.Setter;
 
 import java.util.UUID;
 
-import com.bat.domain.exceptions.PairException;
+import com.arbibot.domain.exceptions.PairException;
 
 /**
  * The {@code Pair} class represents a trading pair consisting of two financial

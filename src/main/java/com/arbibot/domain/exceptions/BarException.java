@@ -1,10 +1,9 @@
-package com.bat.domain.exceptions;
+package com.arbibot.domain.exceptions;
 
 /**
- * The {@code PairException} class represents an exception that is
- * thrown
- * when an error occurs during the initialization or use of a {@code Pair}
- * object
+ * The {@code BarException} class represents an exception that is thrown
+ * when an error occurs during the processing of create or update operations on
+ * a bar.
  * <p>
  * This exception is used to indicate specific validation errors that occur
  * during the order validation process.
@@ -17,28 +16,25 @@ package com.bat.domain.exceptions;
  * <pre>
  * {@code
  * try {
- *     order.validateOrder();
- * } catch (PairException e) {
+ *     bar.validateBar()
+ * } catch (BarException e) {
  *     System.out.println("Validation error: " + e.getMessage());
  *     // Handle the validation error, such as logging or notifying the user
  * }
  * }
  * </pre>
  *
- * @see com.bat.domain.entities.Pair
- * 
+ * @see com.bat.core.domain.entities.Bar#validateBar()
  * @author SChoumiloff
  * @since 1.0
  */
-public class PairException extends RuntimeException {
-
+public class BarException extends Exception {
     /**
-     * Constructs a new {@code PairException} with the specified detail
-     * message.
+     * Constructs a new {@code BarException} with the specified detail message.
      *
      * @param errorMessage the detail message describing the validation error
      */
-    public PairException(String errorMessage) {
+    public BarException(String errorMessage) {
         super(errorMessage);
     }
 }

@@ -1,4 +1,4 @@
-package com.bat.domain;
+package com.arbibot.domain;
 
 import lombok.Getter;
 import lombok.Setter;
