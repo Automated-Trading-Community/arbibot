@@ -10,7 +10,7 @@ Récupérer toutes les x-secondes / milli secondes depuis un broker.
 Le `taux de chage impliqué` est le taux de change (valeur asset1 / valeur asset2) dérivé indirectement à partir des taux de change des autres devises (autre devises du triangle). Pour résumé, le `taux de change impliqué` représente le taux de change entre deux devises en passant par une troisième. 
 
 **Taux de change impliqué**
-$$TI_{AC} = \frac{{V_{A}}{V_{B}}}.\frac{V_{B}}{V_{C}}$$
+$$TI_{AC} = \frac{V_{A}}{V_{B}}.\frac{V_{B}}{V_{C}}$$
 
 - Avec A, B, C les devises
 - `TI` le taux de change Impliqué
