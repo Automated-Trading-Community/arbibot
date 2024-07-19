@@ -51,7 +51,7 @@ Avec :
 
 On définit le bénéfice comme suit : 
 
-$$B = M.(TI-TR)-F_{usd} $$
+$$B = QTT_{A}.(TI-TR)-F_{usd} $$
 
 avec : 
 
