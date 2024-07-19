@@ -62,3 +62,45 @@ avec :
 
 Si B est supérieur à 1 alors une opportunité est présente. 
 
+## Cas concret
+Nous souhaitons arbitrer sur ETH/USDT avec BTC comme intermédiaire. 
+
+Supposons les prix suivant : 
+
+- Prix ETH/USDT=1980 (1 ETH = 1980 USDT)
+- Prix ETH/BTC= 0.05 (1 ETH = 0.05 BTC)
+- Prix BTC/USDT = 40000
+- Prix BTC/USDT=40000 (1 BTC = 40000 USDT)
+- Frais de transaction = 0.075% par transaction
+
+### Calcul du Taux de change Impliqué ETH/USDT via BTC
+
+$$TI_{ETHUSDT} = \frac{ETH}{BTC}.\frac{BTC}{USDT}$$
+$$TI_{ETHUSDT} = 0.05 . 40000$$
+$$TI_{ETHUSDT} = 2000$$
+
+Nous avons une opportunité car $TI_{ETHUSDT} \gt TR_{ETHUSDT}$
+
+**Achat d'ETH**
+
+- Achat de 1 ETH pour 1980 USDT
+- Frais -> 0,198 USDT
+- Montant net en ETH -> 0.999 ETH
+
+**Vente 0.999 ETH pour BTC**
+
+- Vente de 0.04995 BTC pour 0.999 ETH
+- Frais -> 0,1998 USDT (0.0000049995 BTC)
+- Montant net en BTC -> 0.0499900005 BTC
+
+**Vente de 0.0499900005 BTC en USDT**
+
+- Vente de 0.0499900005 BTC pour 1999.60002 USDT
+- Frais -> 0.19996 USDT
+- Montant net en USDT = 1999.40006
+
+**Calcul du bénéfice**
+
+$$B = 1999,40006 -  1980 = 19,40006$$
+
+Soit une augmentation de `0.98%`
