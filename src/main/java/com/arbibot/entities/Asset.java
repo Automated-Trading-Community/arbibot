@@ -65,6 +65,4 @@ public class Asset {
     private Asset(String name) {
         this.name = name;
     }
-
-    
 }

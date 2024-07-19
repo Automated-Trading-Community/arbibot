@@ -3,7 +3,7 @@ package com.arbibot.ports.input;
 /**
  * Super interface qui ne va pas être implémenter directement.
  */
-public interface ForArbitrage {
+public interface ForArbitraging {
 
     /**
      * Indicates whether the arbitrage action is potentially profitable. 
