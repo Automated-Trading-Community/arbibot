@@ -1,5 +1,6 @@
 package com.arbibot.entities;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -41,7 +42,7 @@ public class Exchange {
     private String name;
     private String url;
     private List<Pair> tradingPairs;
-    private float fees;
+    private BigDecimal fees;
     private Asset feesAsset;
     private ExchangeType exchangeType;
 
@@ -56,7 +57,7 @@ public class Exchange {
      * @param exchangeType the type of the exchange (e.g., CEX,
      *                     DEX)
      */
-    public Exchange(String name, String url, List<Pair> tradingPairs, float fees, Asset feesAsset,
+    public Exchange(String name, String url, List<Pair> tradingPairs, BigDecimal fees, Asset feesAsset,
             ExchangeType exchangeType) {
         this.name = name;
         this.url = url;

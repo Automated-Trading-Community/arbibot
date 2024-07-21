@@ -70,6 +70,13 @@ public class Pair {
         }
         this.baseAsset = baseAsset;
         this.quoteAsset = quoteAsset;
+    }
 
+    @Override
+    public boolean equals(Object obj) {
+        Pair comparedPair = (Pair) obj;
+        if (this.baseAsset.equals(comparedPair.getBaseAsset()) && this.quoteAsset.equals(comparedPair.getQuoteAsset()))
+            return true;
+        return false;
     }
 }

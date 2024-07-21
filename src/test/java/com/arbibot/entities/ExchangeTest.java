@@ -1,16 +1,13 @@
-package com.arbibot;
+package com.arbibot.entities;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.arbibot.exceptions.ExchangeException;
-import com.arbibot.entities.Asset;
-import com.arbibot.entities.Exchange;
-import com.arbibot.entities.ExchangeType;
-import com.arbibot.entities.Pair;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
 
@@ -61,8 +58,10 @@ public class ExchangeTest {
 
     @Test
     public void testExchangeType() {
-        Exchange cexExchange = new Exchange("Binance", "https://binance.com", cexPairs, 0.1f, bnb, ExchangeType.CEX);
-        Exchange dexExchange = new Exchange("Uniswap", "https://uniswap.org", dexPairs, 0.3f, eth, ExchangeType.DEX);
+        Exchange cexExchange = new Exchange("Binance", "https://binance.com", cexPairs, BigDecimal.valueOf(0.1), bnb,
+                ExchangeType.CEX);
+        Exchange dexExchange = new Exchange("Uniswap", "https://uniswap.org", dexPairs, BigDecimal.valueOf(0.3), eth,
+                ExchangeType.DEX);
 
         assertEquals(ExchangeType.CEX, cexExchange.getExchangeType());
         assertEquals(ExchangeType.DEX, dexExchange.getExchangeType());
@@ -70,14 +69,16 @@ public class ExchangeTest {
 
     @Test
     public void testValideExchange() {
-        Exchange cexExchange = new Exchange("Binance", "https://binance.com", cexPairs, 0.1f, bnb, ExchangeType.CEX);
+        Exchange cexExchange = new Exchange("Binance", "https://binance.com", cexPairs, BigDecimal.valueOf(0.1), bnb,
+                ExchangeType.CEX);
         assertDoesNotThrow(() -> cexExchange.validateExchange());
     }
 
     @Test
     public void testExchangeMustThrowException() {
         List<Pair> cexPairsError = Arrays.asList(btcusdt, ethusdt, bnbusdt, solusdt, solusdt);
-        Exchange cexExchange = new Exchange("Binance", "https://binance.com", cexPairsError, 0.1f, bnb,
+        Exchange cexExchange = new Exchange("Binance", "https://binance.com", cexPairsError, BigDecimal.valueOf(0.1),
+                bnb,
                 ExchangeType.CEX);
         assertThrows(ExchangeException.class, () -> cexExchange.validateExchange());
     }

@@ -1,8 +1,6 @@
-package com.arbibot;
+package com.arbibot.entities;
 
 import org.junit.jupiter.api.Test;
-
-import com.arbibot.entities.Asset;
 
 import static org.junit.jupiter.api.Assertions.*;
 

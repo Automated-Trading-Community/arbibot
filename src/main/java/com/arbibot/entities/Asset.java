@@ -65,4 +65,12 @@ public class Asset {
     private Asset(String name) {
         this.name = name;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        Asset comparedAsset = (Asset) obj;
+        if (this.name.equals(comparedAsset.getName()))
+            return true;
+        return false;
+    }
 }
