@@ -1,8 +1,12 @@
-package com.arbibot.entities;
+package com.arbibot;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import com.arbibot.entities.Asset;
+import com.arbibot.entities.Exchange;
+import com.arbibot.entities.ExchangeType;
+import com.arbibot.entities.Pair;
 import com.arbibot.exceptions.ExchangeException;
 
 import static org.junit.jupiter.api.Assertions.*;

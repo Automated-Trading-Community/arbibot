@@ -1,4 +1,4 @@
-package com.arbibot.entities;
+package com.arbibot;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -6,6 +6,11 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import java.math.BigDecimal;
 
 import org.junit.Test;
+
+import com.arbibot.entities.Asset;
+import com.arbibot.entities.Order;
+import com.arbibot.entities.OrderType;
+import com.arbibot.entities.Pair;
 
 public class OrderTest {
 

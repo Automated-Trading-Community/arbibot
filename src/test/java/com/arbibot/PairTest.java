@@ -1,4 +1,4 @@
-package com.arbibot.entities;
+package com.arbibot;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
@@ -7,6 +7,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.Test;
 
+import com.arbibot.entities.Asset;
+import com.arbibot.entities.Pair;
 import com.arbibot.exceptions.PairException;
 
 public class PairTest {
