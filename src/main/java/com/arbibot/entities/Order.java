@@ -17,6 +17,8 @@ public class Order {
     private BigDecimal percentFees;
     private BigDecimal exexutedQuantityBaseAsset;
     private BigDecimal exexutedQuantityQuoteAsset;
+    
+    // TODO : je suggère qu'on ajoute le statut de l'ordre (SUCCESS, REJECTED etc.) et qu'on ait des accessseurs pour l'état.
 
     public Order(Pair pair, OrderType type, BigDecimal qttQuoteAsset, BigDecimal qttBaseAsset,
             BigDecimal currentPairPrice,
@@ -41,4 +43,6 @@ public class Order {
         this.exexutedQuantityBaseAsset = this.qttBaseAsset.multiply(this.percentFees.divide(BigDecimal.valueOf(100)));
         this.exexutedQuantityQuoteAsset = this.qttQuoteAsset.multiply(this.percentFees.divide(BigDecimal.valueOf(100)));
     }
+
+
 }

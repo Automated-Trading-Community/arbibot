@@ -9,7 +9,7 @@ public interface ForExchangeDataRecovery {
 
     /**
      * 
-     * Recover the price for a Pair
+     * Recover the price for a Pair.
      * 
      * @param pair
      * @return {@code BigDecimal}
@@ -17,7 +17,7 @@ public interface ForExchangeDataRecovery {
     BigDecimal getPriceForPair(Pair pair);
 
     /**
-     * must return something but i don't know what
+     * TODO : je propose qu'on retourne le statut de l'ordre (SUCCESS, REJECTED etc.)
      * 
      * @param order
      */
