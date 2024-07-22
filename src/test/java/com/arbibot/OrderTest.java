@@ -18,7 +18,7 @@ public class OrderTest {
     public void testOrderCreationWithQuoteAsset() {
         Asset baseAsset = Asset.create("BTC");
         Asset quoteAsset = Asset.create("USD");
-        Pair pair = Pair.create(baseAsset, quoteAsset);
+        Pair pair = new Pair(baseAsset, quoteAsset);
         BigDecimal qttQuoteAsset = BigDecimal.valueOf(1000);
         BigDecimal currentPairPrice = BigDecimal.valueOf(50000);
         BigDecimal percentFees = BigDecimal.valueOf(0.1);
@@ -37,7 +37,7 @@ public class OrderTest {
     public void testOrderCreationWithBaseAsset() {
         Asset baseAsset = Asset.create("BTC");
         Asset quoteAsset = Asset.create("USD");
-        Pair pair = Pair.create(baseAsset, quoteAsset);
+        Pair pair = new Pair(baseAsset, quoteAsset);
         BigDecimal qttBaseAsset = BigDecimal.valueOf(0.02);
         BigDecimal currentPairPrice = BigDecimal.valueOf(50000);
         BigDecimal percentFees = BigDecimal.valueOf(0.1);
@@ -56,7 +56,7 @@ public class OrderTest {
     public void testOrderCreationWithNullAssets() {
         Asset baseAsset = Asset.create("BTC");
         Asset quoteAsset = Asset.create("USD");
-        Pair pair = Pair.create(baseAsset, quoteAsset);
+        Pair pair = new Pair(baseAsset, quoteAsset);
         BigDecimal currentPairPrice = BigDecimal.valueOf(50000);
         BigDecimal percentFees = BigDecimal.valueOf(0.1);
 
@@ -69,7 +69,7 @@ public class OrderTest {
     public void testComputeFees() {
         Asset baseAsset = Asset.create("BTC");
         Asset quoteAsset = Asset.create("USD");
-        Pair pair = Pair.create(baseAsset, quoteAsset);
+        Pair pair = new Pair(baseAsset, quoteAsset);
         BigDecimal qttQuoteAsset = BigDecimal.valueOf(1000);
         BigDecimal currentPairPrice = BigDecimal.valueOf(50000);
         BigDecimal percentFees = BigDecimal.valueOf(0.1);

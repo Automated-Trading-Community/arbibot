@@ -3,6 +3,7 @@ package com.arbibot.entities;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 import com.arbibot.exceptions.PairException;
@@ -26,7 +27,7 @@ import com.arbibot.exceptions.PairException;
  * {@code
  * Asset btc = Asset.create("Bitcoin");
  * Asset usd = Asset.create("US Dollar");
- * Pair btcUsd = Pair.create(btc, usd);
+ * Pair btcUsd = new Pair(btc, usd);
  * System.out.println("Trading Pair ID: " + btcUsd.getId());
  * System.out.println("Base Asset: " + btcUsd.getBaseAsset().getName());
  * System.out.println("Quote Asset: " + btcUsd.getQuoteAsset().getName());
@@ -40,22 +41,11 @@ import com.arbibot.exceptions.PairException;
 @Getter
 @Setter
 public class Pair {
-    /**
-     * Static factory method to create a {@code Pair} instance.
-     * This method ensures the {@code id} is auto-generated internally.
-     *
-     * @param baseAsset  the base asset
-     * @param quoteAsset the quote asset
-     * @return a new {@code Pair} instance with a unique ID and specified assets
-     */
-    public static Pair create(Asset baseAsset, Asset quoteAsset) {
-        return new Pair(baseAsset, quoteAsset);
-    }
-
     private final UUID id = UUID.randomUUID();
 
     private Asset baseAsset;
     private Asset quoteAsset;
+    private BigDecimal price;
 
     /**
      * Constructs a {@code Pair} with the specified base asset and quote asset.
@@ -64,12 +54,23 @@ public class Pair {
      * @param baseAsset  the primary asset in the trading pair
      * @param quoteAsset the asset in which the value of the base asset is quoted
      */
-    private Pair(Asset baseAsset, Asset quoteAsset) {
+    public Pair(Asset baseAsset, Asset quoteAsset) {
         if (baseAsset.getName().equalsIgnoreCase(quoteAsset.getName())) {
             throw new PairException("Base asset and quote asset must be differents.");
         }
         this.baseAsset = baseAsset;
         this.quoteAsset = quoteAsset;
+    }
+
+    /**
+     * 
+     * @param baseAsset
+     * @param quoteAsset
+     * @param price
+     */
+    public Pair(Asset baseAsset, Asset quoteAsset, BigDecimal price) {
+        this(baseAsset, quoteAsset);
+        this.price = price;
     }
 
     @Override
@@ -78,5 +79,10 @@ public class Pair {
         if (this.baseAsset.equals(comparedPair.getBaseAsset()) && this.quoteAsset.equals(comparedPair.getQuoteAsset()))
             return true;
         return false;
+    }
+
+    @Override
+    public String toString() {
+        return baseAsset.getName() + "/" + quoteAsset.getName() + this.price != null ? " (" + this.price + ")" : "";
     }
 }

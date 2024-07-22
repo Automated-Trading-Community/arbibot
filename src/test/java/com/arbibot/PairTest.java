@@ -18,7 +18,7 @@ public class PairTest {
         Asset bitcoin = Asset.create("btc");
         Asset usd = Asset.create("usdt");
 
-        Pair btcUsdPair = Pair.create(bitcoin, usd);
+        Pair btcUsdPair = new Pair(bitcoin, usd);
 
         assertNotNull(btcUsdPair);
         assertNotNull(btcUsdPair.getId());
@@ -31,8 +31,8 @@ public class PairTest {
         Asset bitcoin = Asset.create("btc");
         Asset usd = Asset.create("usdt");
 
-        Pair btcUsdPair1 = Pair.create(bitcoin, usd);
-        Pair btcUsdPair2 = Pair.create(bitcoin, usd);
+        Pair btcUsdPair1 = new Pair(bitcoin, usd);
+        Pair btcUsdPair2 = new Pair(bitcoin, usd);
 
         assertNotNull(btcUsdPair1.getId());
         assertNotNull(btcUsdPair2.getId());
@@ -44,7 +44,7 @@ public class PairTest {
         Asset bitcoin = Asset.create("btc");
         Asset usd = Asset.create("usdt");
 
-        Pair btcUsdPair = Pair.create(bitcoin, usd);
+        Pair btcUsdPair = new Pair(bitcoin, usd);
 
         assertEquals("btc", btcUsdPair.getBaseAsset().getName());
         assertEquals("usdt", btcUsdPair.getQuoteAsset().getName());
@@ -56,7 +56,7 @@ public class PairTest {
         Asset bitcoin2 = Asset.create("btc");
 
         Exception exception = assertThrows(PairException.class, () -> {
-            Pair.create(bitcoin1, bitcoin2);
+            new Pair(bitcoin1, bitcoin2);
         });
         assertEquals("Base asset and quote asset must be differents.", exception.getMessage());
     }

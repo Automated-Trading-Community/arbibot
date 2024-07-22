@@ -1,11 +1,10 @@
 package com.arbibot.ports.output;
 
-import java.math.BigDecimal;
-
 import com.arbibot.entities.Order;
 import com.arbibot.entities.Pair;
+import com.arbibot.entities.Exchange;
 
-public interface ForExchangeDataRecovery {
+public interface ForExchangeCommunication {
 
     /**
      * 
@@ -14,12 +13,13 @@ public interface ForExchangeDataRecovery {
      * @param pair
      * @return {@code BigDecimal}
      */
-    BigDecimal getPriceForPair(Pair pair);
+    void getPriceForPair(Pair pair, Exchange exchange);
 
     /**
-     * TODO : je propose qu'on retourne le statut de l'ordre (SUCCESS, REJECTED etc.)
+     * TODO : je propose qu'on retourne le statut de l'ordre (SUCCESS, REJECTED
+     * etc.)
      * 
      * @param order
      */
-    void passOrder(Order order);
+    void passOrders(Order[] orders);
 }

@@ -44,17 +44,17 @@ public class ExchangeTest {
         usdt = Asset.create("USDT");
         sol = Asset.create("SOL");
 
-        btcusdt = Pair.create(btc, usdt);
-        ethusdt = Pair.create(eth, usdt);
-        bnbusdt = Pair.create(bnb, usdt);
-        solusdt = Pair.create(sol, usdt);
+        btcusdt = new Pair(btc, usdt);
+        ethusdt = new Pair(eth, usdt);
+        bnbusdt = new Pair(bnb, usdt);
+        solusdt = new Pair(sol, usdt);
 
-        btcbnb = Pair.create(btc, bnb);
-        solbnb = Pair.create(sol, bnb);
-        ethbnb = Pair.create(eth, bnb);
+        btcbnb = new Pair(btc, bnb);
+        solbnb = new Pair(sol, bnb);
+        ethbnb = new Pair(eth, bnb);
 
-        solbtc = Pair.create(sol, btc);
-        ethbtc = Pair.create(eth, btc);
+        solbtc = new Pair(sol, btc);
+        ethbtc = new Pair(eth, btc);
 
         cexPairs = Arrays.asList(btcusdt, ethusdt, bnbusdt, solusdt);
         dexPairs = Arrays.asList(solusdt, ethusdt, bnbusdt, btcbnb, solbnb, ethbnb, solbtc, ethbtc);

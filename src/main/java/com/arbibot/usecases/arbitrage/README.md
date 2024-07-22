@@ -12,7 +12,7 @@ $$TI_{A/C} = \frac{V_{A}}{V_{B}}.\frac{V_{B}}{V_{C}}$$
 
 Avec :
 - *A*, *B* et *C* respectivement l'asset de départ, l'asset intermédiaire et l'asset de fin de l'arbitrage.
-- $TI_{A - C}$ le TCI entre les assets *A* et *C*.
+- $TI_{A / C}$ le TCI entre les assets *A* et *C*.
 - $V_{i}$ la valeur de l'asset *i*.
 
 ## Opportunité et conditions d'arbitrage
@@ -27,8 +27,8 @@ En prenant *A*, *B* et *C* trois assets dont les paires de trading `A/B`, `B/C` 
 ## Déclenchement de l'arbitrage
 ### Définitions des frais
 
-Dans la plupart des exchanges les frais sont exprimés dans l'asset acheté (achat sur l'asset *A* donc frais exprimé en *A*). Soit $F_{Ausd}$ les frais payés pour l'achat / vente de l'asset A en usd tels que
-$$F_{Ausd} = F_{A} \times TR_{A/USD}$$
+Dans la plupart des exchanges les frais sont exprimés dans l'asset acheté (achat sur l'asset *A* donc frais exprimé en *A*). Soit $F_{A/USD}$ les frais payés pour l'achat / vente de l'asset *A* en USD tels que
+$$F_{A/USD} = F_{A} \times TR_{A/USD}$$
 
 Avec :
 - $TR_{A/USD}$ le taux de change réel de la paire *A/USD*
