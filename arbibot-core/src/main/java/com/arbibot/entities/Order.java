@@ -38,9 +38,9 @@ public class Order {
     @Setter
     private BigDecimal fees;
     @Setter
-    private BigDecimal exexutedQuantityBaseAsset;
+    private BigDecimal executedQuantityBaseAsset;
     @Setter
-    private BigDecimal exexutedQuantityQuoteAsset;
+    private BigDecimal executedQuantityQuoteAsset;
 
     private BigDecimal qttQuoteAsset;
     private BigDecimal qttBaseAsset;
@@ -95,8 +95,8 @@ public class Order {
                 break;
             case SELL:
                 // Dans le cas d'un ordre de vente les frais sont payés suivant le quoteAsset
-                // Exemple je vend 1 btc sur la paire btc/usdt avec des frais de 0.1% alors je
-                // vais payer priceBTC * 0.001 de frais
+                // Exemple je vends 1 btc sur la paire btc/usdt avec des frais de 0.1% alors je
+                // vais payer priceUSDT * 0.001 de frais
                 // Si btc/usdt = 40000 je vais payer 40 USDT de frais
                 this.fees = this.qttQuoteAsset.multiply(this.percentFees.divide(BigDecimal.valueOf(100)));
                 break;
@@ -109,12 +109,12 @@ public class Order {
     private void computeExecuted() {
         switch (this.type) {
             case BUY:
-                this.exexutedQuantityBaseAsset = this.qttBaseAsset.subtract(this.fees);
-                this.exexutedQuantityQuoteAsset = this.exexutedQuantityBaseAsset.multiply(this.currentPairPrice);
+                this.executedQuantityBaseAsset = this.qttBaseAsset.subtract(this.fees);
+                this.executedQuantityQuoteAsset = this.executedQuantityBaseAsset.multiply(this.currentPairPrice);
                 break;
             case SELL:
-                this.exexutedQuantityQuoteAsset = this.qttQuoteAsset.subtract(fees);
-                this.exexutedQuantityBaseAsset = this.exexutedQuantityQuoteAsset.divide(currentPairPrice);
+                this.executedQuantityQuoteAsset = this.qttQuoteAsset.subtract(fees);
+                this.executedQuantityBaseAsset = this.executedQuantityQuoteAsset.divide(this.currentPairPrice);
                 break;
         }
     }
