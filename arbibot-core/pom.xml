@@ -6,7 +6,7 @@
 
   <groupId>com.automated-trading-community</groupId>
   <artifactId>arbibot-core</artifactId>
-  <version>1.0-SNAPSHOT</version>
+  <version>1.0</version>
 
   <name>core</name>
   <url>http://www.example.com</url>
