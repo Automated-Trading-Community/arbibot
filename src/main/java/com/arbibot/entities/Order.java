@@ -19,6 +19,7 @@ import lombok.Setter;
  * 
  * @author SGuillemin
  * @author SChoumiloff
+ * 
  * @since 1.0
  */
 @Getter
