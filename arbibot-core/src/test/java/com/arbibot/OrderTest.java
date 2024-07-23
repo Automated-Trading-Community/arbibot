@@ -23,7 +23,7 @@ public class OrderTest {
         Order order = new Order(pair, OrderType.BUY, quantity, Order.Reference.QUOTE, currentPairPrice, percentFees);
 
         assertTrue(order.getQttBaseAsset().equals(BigDecimal.valueOf(1)));
-        assertTrue(order.getFees().equals(BigDecimal.valueOf(0.001))); // ici fees en btc
+        assertTrue(order.getFees().equals(BigDecimal.valueOf(0.001)));
         assertTrue(order.getExexutedQuantityQuoteAsset().equals(BigDecimal.valueOf(39600)));
         assertTrue(order.getExexutedQuantityBaseAsset().equals(BigDecimal.valueOf(0.99)));
     }
@@ -33,15 +33,12 @@ public class OrderTest {
         Pair pair = new Pair(new Asset("btc"), new Asset("usdt"));
         BigDecimal quantity = new BigDecimal("1");
         BigDecimal currentPairPrice = new BigDecimal("40000");
-        BigDecimal percentFees = new BigDecimal("0.1"); // 0.1%
+        BigDecimal percentFees = new BigDecimal("0.1");
 
         Order order = new Order(pair, OrderType.SELL, quantity, Order.Reference.BASE, currentPairPrice, percentFees);
 
         assertTrue(order.getQttBaseAsset().equals(BigDecimal.valueOf(1)));
-        assertTrue(order.getFees().equals(currentPairPrice.multiply(percentFees.divide(BigDecimal.valueOf(100))))); // ici
-                                                                                                                    // fees
-                                                                                                                    // en
-                                                                                                                    // usdt
+        assertTrue(order.getFees().equals(currentPairPrice.multiply(percentFees.divide(BigDecimal.valueOf(100)))));
         assertTrue(order.getExexutedQuantityQuoteAsset().equals(BigDecimal.valueOf(39600)));
         assertTrue(order.getExexutedQuantityBaseAsset().equals(BigDecimal.valueOf(0.99)));
     }

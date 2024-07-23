@@ -35,20 +35,18 @@ public class Order {
 
     @Setter
     private OrderStatus status;
+    @Setter
+    private BigDecimal fees;
+    @Setter
+    private BigDecimal exexutedQuantityBaseAsset;
+    @Setter
+    private BigDecimal exexutedQuantityQuoteAsset;
 
     private BigDecimal qttQuoteAsset;
     private BigDecimal qttBaseAsset;
     private Reference reference;
     private BigDecimal currentPairPrice;
     private BigDecimal percentFees;
-
-    @Setter
-    private BigDecimal fees;
-
-    @Setter
-    private BigDecimal exexutedQuantityBaseAsset;
-    @Setter
-    private BigDecimal exexutedQuantityQuoteAsset;
 
     /**
      * 

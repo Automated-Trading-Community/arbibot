@@ -153,5 +153,23 @@ public class TriangularArbitrageTest {
         public Map<Pair, Order> getPassedOrders() {
             return passedOrders;
         }
+
+        @Override
+        public BigDecimal getBalanceForAsset(Asset asset, Exchange exchange) {
+            // TODO Auto-generated method stub
+            throw new UnsupportedOperationException("Unimplemented method 'getBalanceForAsset'");
+        }
+
+        @Override
+        public Order getOrderInfo(String orderId, Exchange exchange) {
+            // TODO Auto-generated method stub
+            throw new UnsupportedOperationException("Unimplemented method 'getOrderInfo'");
+        }
+
+        @Override
+        public List<Pair> getAvailableTradingPairs(Exchange exchange) {
+            // TODO Auto-generated method stub
+            throw new UnsupportedOperationException("Unimplemented method 'getAvailableTradingPairs'");
+        }
     }
 }

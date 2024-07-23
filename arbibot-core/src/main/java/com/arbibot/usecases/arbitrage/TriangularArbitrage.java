@@ -71,10 +71,13 @@ public class TriangularArbitrage implements ForTriangularArbitraging {
             if (impliedRate.compareTo(p1.getPrice()) < 0) {
                 Order[] orders = this.createOrders(p1, p2, p3, exchange, quantity);
                 BigDecimal fees = this.computeFeesForBuyCurrency(orders);
-
-                if (fees.add(impliedRate).compareTo(p1.getPrice()) < 0)
-                    // Peux etre calculer le taux de variation ici ?
+                
+                if (fees.add(impliedRate).compareTo(p1.getPrice()) < 0) {
                     this.passOrders(orders);
+                    BigDecimal variation = this.computeVaritation(p1.getPrice(), impliedRate);
+                    // Ajouter une condition supplémentaire en mode si variation sup a 0.5 % alors
+                    // go
+                }
             }
         } else
             throw new TriangularArbitragingException("Triangle or asset buy is not valid");
@@ -147,5 +150,9 @@ public class TriangularArbitrage implements ForTriangularArbitraging {
      */
     private void passOrders(Order[] orders) {
         this.forExchangeCommunication.passOrders(orders);
+    }
+
+    private BigDecimal computeVaritation(BigDecimal initPrice, BigDecimal finalPrice) {
+        return ((finalPrice.subtract(initPrice)).divide(initPrice)).multiply(BigDecimal.valueOf(100));
     }
 }
