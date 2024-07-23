@@ -10,16 +10,14 @@ public interface ForExchangeCommunication {
      * 
      * Recover the price for a Pair.
      * 
-     * @param pair
      * @return {@code BigDecimal}
      */
     void getPriceForPair(Pair pair, Exchange exchange);
 
     /**
-     * TODO : je propose qu'on retourne le statut de l'ordre (SUCCESS, REJECTED
-     * etc.)
+     * Pass orders and update their status.
      * 
-     * @param order
+     * @see com.arbibot.entities.Order
      */
     void passOrders(Order[] orders);
 }

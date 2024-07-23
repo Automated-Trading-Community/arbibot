@@ -62,7 +62,7 @@ public class Asset {
      *
      * @param name the name of the asset
      */
-    private Asset(String name) {
+    public Asset(String name) {
         this.name = name;
     }
 

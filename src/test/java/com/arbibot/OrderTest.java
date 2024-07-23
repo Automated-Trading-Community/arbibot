@@ -1,87 +1,48 @@
 package com.arbibot;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.math.BigDecimal;
 
 import org.junit.Test;
 
-import com.arbibot.entities.Asset;
 import com.arbibot.entities.Order;
 import com.arbibot.entities.OrderType;
 import com.arbibot.entities.Pair;
+import com.arbibot.entities.Asset;
 
 public class OrderTest {
-
     @Test
-    public void testOrderCreationWithQuoteAsset() {
-        Asset baseAsset = Asset.create("BTC");
-        Asset quoteAsset = Asset.create("USD");
-        Pair pair = new Pair(baseAsset, quoteAsset);
-        BigDecimal qttQuoteAsset = BigDecimal.valueOf(1000);
-        BigDecimal currentPairPrice = BigDecimal.valueOf(50000);
-        BigDecimal percentFees = BigDecimal.valueOf(0.1);
+    public void testBuyOrder() {
+        Pair pair = new Pair(new Asset("btc"), new Asset("usdt"));
+        BigDecimal quantity = new BigDecimal("40000");
+        BigDecimal currentPairPrice = new BigDecimal("40000");
+        BigDecimal percentFees = new BigDecimal("0.1");
 
-        Order order = new Order(pair, OrderType.BUY, qttQuoteAsset, null, currentPairPrice, percentFees);
+        Order order = new Order(pair, OrderType.BUY, quantity, Order.Reference.QUOTE, currentPairPrice, percentFees);
 
-        assertEquals(pair, order.getPair());
-        assertEquals(OrderType.BUY, order.getType());
-        assertEquals(qttQuoteAsset, order.getQttQuoteAsset());
-        assertEquals(qttQuoteAsset.multiply(currentPairPrice), order.getQttBaseAsset());
-        assertEquals(currentPairPrice, order.getCurrentPairPrice());
-        assertEquals(percentFees, order.getPercentFees());
+        assertTrue(order.getQttBaseAsset().equals(BigDecimal.valueOf(1)));
+        assertTrue(order.getFees().equals(BigDecimal.valueOf(0.001))); // ici fees en btc
+        assertTrue(order.getExexutedQuantityQuoteAsset().equals(BigDecimal.valueOf(39600)));
+        assertTrue(order.getExexutedQuantityBaseAsset().equals(BigDecimal.valueOf(0.99)));
     }
 
     @Test
-    public void testOrderCreationWithBaseAsset() {
-        Asset baseAsset = Asset.create("BTC");
-        Asset quoteAsset = Asset.create("USD");
-        Pair pair = new Pair(baseAsset, quoteAsset);
-        BigDecimal qttBaseAsset = BigDecimal.valueOf(0.02);
-        BigDecimal currentPairPrice = BigDecimal.valueOf(50000);
-        BigDecimal percentFees = BigDecimal.valueOf(0.1);
+    public void testSellOrder() {
+        Pair pair = new Pair(new Asset("btc"), new Asset("usdt"));
+        BigDecimal quantity = new BigDecimal("1");
+        BigDecimal currentPairPrice = new BigDecimal("40000");
+        BigDecimal percentFees = new BigDecimal("0.1"); // 0.1%
 
-        Order order = new Order(pair, OrderType.SELL, null, qttBaseAsset, currentPairPrice, percentFees);
+        Order order = new Order(pair, OrderType.SELL, quantity, Order.Reference.BASE, currentPairPrice, percentFees);
 
-        assertEquals(pair, order.getPair());
-        assertEquals(OrderType.SELL, order.getType());
-        assertEquals(qttBaseAsset, order.getQttBaseAsset());
-        assertEquals(qttBaseAsset.divide(currentPairPrice), order.getQttQuoteAsset());
-        assertEquals(currentPairPrice, order.getCurrentPairPrice());
-        assertEquals(percentFees, order.getPercentFees());
-    }
-
-    @Test
-    public void testOrderCreationWithNullAssets() {
-        Asset baseAsset = Asset.create("BTC");
-        Asset quoteAsset = Asset.create("USD");
-        Pair pair = new Pair(baseAsset, quoteAsset);
-        BigDecimal currentPairPrice = BigDecimal.valueOf(50000);
-        BigDecimal percentFees = BigDecimal.valueOf(0.1);
-
-        assertThrows(IllegalArgumentException.class, () -> {
-            new Order(pair, OrderType.BUY, null, null, currentPairPrice, percentFees);
-        });
-    }
-
-    @Test
-    public void testComputeFees() {
-        Asset baseAsset = Asset.create("BTC");
-        Asset quoteAsset = Asset.create("USD");
-        Pair pair = new Pair(baseAsset, quoteAsset);
-        BigDecimal qttQuoteAsset = BigDecimal.valueOf(1000);
-        BigDecimal currentPairPrice = BigDecimal.valueOf(50000);
-        BigDecimal percentFees = BigDecimal.valueOf(0.1);
-
-        Order order = new Order(pair, OrderType.BUY, qttQuoteAsset, null, currentPairPrice, percentFees);
-
-        BigDecimal expectedFeesBaseAsset = order.getQttBaseAsset()
-                .multiply(percentFees.divide(BigDecimal.valueOf(100)));
-        BigDecimal expectedFeesQuoteAsset = order.getQttQuoteAsset()
-                .multiply(percentFees.divide(BigDecimal.valueOf(100)));
-
-        assertEquals(expectedFeesBaseAsset, order.getExexutedQuantityBaseAsset());
-        assertEquals(expectedFeesQuoteAsset, order.getExexutedQuantityQuoteAsset());
+        assertTrue(order.getQttBaseAsset().equals(BigDecimal.valueOf(1)));
+        assertTrue(order.getFees().equals(currentPairPrice.multiply(percentFees.divide(BigDecimal.valueOf(100))))); // ici
+                                                                                                                    // fees
+                                                                                                                    // en
+                                                                                                                    // usdt
+        assertTrue(order.getExexutedQuantityQuoteAsset().equals(BigDecimal.valueOf(39600)));
+        assertTrue(order.getExexutedQuantityBaseAsset().equals(BigDecimal.valueOf(0.99)));
     }
 }
