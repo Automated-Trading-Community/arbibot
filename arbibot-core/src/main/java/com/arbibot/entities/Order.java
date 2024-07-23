@@ -59,20 +59,18 @@ public class Order {
      * @param currentPairPrice
      * @param percentFees
      */
-    public Order(Pair pair, OrderType type, BigDecimal quantity, Reference reference,
-            BigDecimal currentPairPrice,
-            BigDecimal percentFees) {
+    public Order(Pair pair, OrderType type, BigDecimal quantity, BigDecimal percentFees) {
         this.pair = pair;
         this.type = type;
-        this.currentPairPrice = currentPairPrice;
+        this.currentPairPrice = pair.getPrice();
         this.percentFees = percentFees;
 
-        switch (reference) {
-            case QUOTE:
+        switch (type) {
+            case BUY:
                 this.qttQuoteAsset = quantity;
                 this.qttBaseAsset = qttQuoteAsset.divide(currentPairPrice);
                 break;
-            case BASE:
+            case SELL:
                 this.qttBaseAsset = quantity;
                 this.qttQuoteAsset = qttBaseAsset.multiply(currentPairPrice);
                 break;

@@ -120,11 +120,11 @@ public class TriangularArbitrage implements ForTriangularArbitraging {
      */
     private Order[] createOrders(Pair p1, Pair p2, Pair p3, Exchange exchange, BigDecimal quantity) {
         Order[] orders = new Order[3];
-        orders[0] = new Order(p1, OrderType.BUY, quantity, Reference.QUOTE, p1.getPrice(), exchange.getFees());
-        orders[1] = new Order(p2, OrderType.SELL, orders[0].getExecutedQuantityBaseAsset(), Reference.BASE,
-                p2.getPrice(), exchange.getFees());
-        orders[2] = new Order(p3, OrderType.SELL, orders[1].getExecutedQuantityQuoteAsset(), Reference.BASE,
-                p3.getPrice(), exchange.getFees());
+        orders[0] = new Order(p1, OrderType.BUY, quantity, exchange.getFees());
+        orders[1] = new Order(p2, OrderType.SELL, orders[0].getExecutedQuantityBaseAsset(),
+                exchange.getFees());
+        orders[2] = new Order(p3, OrderType.SELL, orders[1].getExecutedQuantityQuoteAsset(),
+                exchange.getFees());
 
         return orders;
     }
