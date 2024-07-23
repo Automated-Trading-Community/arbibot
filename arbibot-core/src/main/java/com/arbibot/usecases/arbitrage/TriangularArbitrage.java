@@ -74,7 +74,7 @@ public class TriangularArbitrage implements ForTriangularArbitraging {
                 
                 if (fees.add(impliedRate).compareTo(p1.getPrice()) < 0) {
                     this.passOrders(orders);
-                    BigDecimal variation = this.computeVaritation(p1.getPrice(), impliedRate);
+                    // BigDecimal variation = this.computeVaritation(p1.getPrice(), impliedRate);
                     // Ajouter une condition supplémentaire en mode si variation sup a 0.5 % alors
                     // go
                 }
@@ -152,7 +152,7 @@ public class TriangularArbitrage implements ForTriangularArbitraging {
         this.forExchangeCommunication.passOrders(orders);
     }
 
-    private BigDecimal computeVaritation(BigDecimal initPrice, BigDecimal finalPrice) {
-        return ((finalPrice.subtract(initPrice)).divide(initPrice)).multiply(BigDecimal.valueOf(100));
-    }
+    // private BigDecimal computeVaritation(BigDecimal initPrice, BigDecimal finalPrice) {
+    //     return ((finalPrice.subtract(initPrice)).divide(initPrice)).multiply(BigDecimal.valueOf(100));
+    // }
 }

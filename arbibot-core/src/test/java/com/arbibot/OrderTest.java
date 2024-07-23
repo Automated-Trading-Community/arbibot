@@ -1,7 +1,6 @@
 package com.arbibot;
 
 import static org.junit.Assert.assertTrue;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.math.BigDecimal;
 
@@ -24,8 +23,8 @@ public class OrderTest {
 
         assertTrue(order.getQttBaseAsset().equals(BigDecimal.valueOf(1)));
         assertTrue(order.getFees().equals(BigDecimal.valueOf(0.001)));
-        assertTrue(order.getExexutedQuantityQuoteAsset().equals(BigDecimal.valueOf(39600)));
-        assertTrue(order.getExexutedQuantityBaseAsset().equals(BigDecimal.valueOf(0.99)));
+        assertTrue(order.getExecutedQuantityQuoteAsset().equals(BigDecimal.valueOf(39600)));
+        assertTrue(order.getExecutedQuantityBaseAsset().equals(BigDecimal.valueOf(0.99)));
     }
 
     @Test
@@ -39,7 +38,7 @@ public class OrderTest {
 
         assertTrue(order.getQttBaseAsset().equals(BigDecimal.valueOf(1)));
         assertTrue(order.getFees().equals(currentPairPrice.multiply(percentFees.divide(BigDecimal.valueOf(100)))));
-        assertTrue(order.getExexutedQuantityQuoteAsset().equals(BigDecimal.valueOf(39600)));
-        assertTrue(order.getExexutedQuantityBaseAsset().equals(BigDecimal.valueOf(0.99)));
+        assertTrue(order.getExecutedQuantityQuoteAsset().equals(BigDecimal.valueOf(39600)));
+        assertTrue(order.getExecutedQuantityBaseAsset().equals(BigDecimal.valueOf(0.99)));
     }
 }
