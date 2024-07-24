@@ -6,7 +6,6 @@ import com.arbibot.entities.Exchange;
 import com.arbibot.entities.Order;
 import com.arbibot.entities.OrderType;
 import com.arbibot.entities.Pair;
-import com.arbibot.entities.Order.Reference;
 import com.arbibot.ports.input.ForTriangularArbitraging;
 import com.arbibot.ports.output.ForExchangeCommunication;
 import com.arbibot.usecases.arbitrage.exceptions.TriangularArbitragingException;
@@ -66,12 +65,15 @@ public class TriangularArbitrage implements ForTriangularArbitraging {
             assert p2.getPrice() != null : p2.toString() + " price is null";
             assert p3.getPrice() != null : p3.toString() + " price is null";
 
-            BigDecimal impliedRate = this.computeImpliedRate(p2.getPrice(), p3.getPrice());
 
-            if (impliedRate.compareTo(p1.getPrice()) < 0) {
+            System.out.println((p1.getPrice()));
+            System.out.println((p2.getPrice()));
+            System.out.println((p3.getPrice()));
+            BigDecimal impliedRate = this.computeImpliedRate(p2.getPrice(), p3.getPrice());
+            if (impliedRate.compareTo(p1.getPrice()) > 0) {
                 Order[] orders = this.createOrders(p1, p2, p3, exchange, quantity);
                 BigDecimal fees = this.computeFeesForBuyCurrency(orders);
-                
+                System.err.println("fees " + fees);
                 if (fees.add(impliedRate).compareTo(p1.getPrice()) < 0) {
                     this.passOrders(orders);
                     // BigDecimal variation = this.computeVaritation(p1.getPrice(), impliedRate);
@@ -121,9 +123,9 @@ public class TriangularArbitrage implements ForTriangularArbitraging {
     private Order[] createOrders(Pair p1, Pair p2, Pair p3, Exchange exchange, BigDecimal quantity) {
         Order[] orders = new Order[3];
         orders[0] = new Order(p1, OrderType.BUY, quantity, exchange.getFees());
-        orders[1] = new Order(p2, OrderType.SELL, orders[0].getExecutedQuantityBaseAsset(),
+        orders[1] = new Order(p2, OrderType.SELL, orders[0].getQuantity(),
                 exchange.getFees());
-        orders[2] = new Order(p3, OrderType.SELL, orders[1].getExecutedQuantityQuoteAsset(),
+        orders[2] = new Order(p3, OrderType.SELL, orders[1].getQuantity(),
                 exchange.getFees());
 
         return orders;
@@ -137,9 +139,13 @@ public class TriangularArbitrage implements ForTriangularArbitraging {
      */
     private BigDecimal computeFeesForBuyCurrency(Order[] orders) {
         BigDecimal feesOrder1, feesOrder2, feesOrder3;
-        feesOrder1 = orders[0].getFees().multiply(orders[0].getPair().getPrice());
-        feesOrder2 = orders[1].getFees().multiply(orders[2].getPair().getPrice());
+        feesOrder1 = orders[0].getFees();//.multiply(orders[0].getPair().getPrice());
+        feesOrder2 = orders[1].getFees();//.multiply(orders[2].getPair().getPrice());
         feesOrder3 = orders[2].getFees();
+
+        System.out.println("fees order 1 " + feesOrder1 + " " + orders[0].getPair().getPrice());
+        System.out.println("fees order 2 " + feesOrder2 + " " + orders[2].getPair().getPrice());
+        System.out.println("fees order 3 " + feesOrder3);
         return feesOrder1.add(feesOrder2).add(feesOrder3);
     }
 

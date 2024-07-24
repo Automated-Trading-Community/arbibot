@@ -9,14 +9,14 @@ import org.junit.jupiter.api.Test;
 
 import com.arbibot.entities.Asset;
 import com.arbibot.entities.Pair;
-import com.arbibot.exceptions.PairException;
+import com.arbibot.exceptions.PairNullAssetException;
 
 public class PairTest {
 
     @Test
     public void testCreatePair() {
-        Asset bitcoin = Asset.create("btc");
-        Asset usd = Asset.create("usdt");
+        Asset bitcoin = new Asset("btc");
+        Asset usd = new Asset("usdt");
 
         Pair btcUsdPair = new Pair(bitcoin, usd);
 
@@ -28,8 +28,8 @@ public class PairTest {
 
     @Test
     public void testPairIdUniqueness() {
-        Asset bitcoin = Asset.create("btc");
-        Asset usd = Asset.create("usdt");
+        Asset bitcoin = new Asset("btc");
+        Asset usd = new Asset("usdt");
 
         Pair btcUsdPair1 = new Pair(bitcoin, usd);
         Pair btcUsdPair2 = new Pair(bitcoin, usd);
@@ -41,8 +41,8 @@ public class PairTest {
 
     @Test
     public void testPairBaseAndQuoteAssets() {
-        Asset bitcoin = Asset.create("btc");
-        Asset usd = Asset.create("usdt");
+        Asset bitcoin = new Asset("btc");
+        Asset usd = new Asset("usdt");
 
         Pair btcUsdPair = new Pair(bitcoin, usd);
 
@@ -52,12 +52,12 @@ public class PairTest {
 
     @Test
     public void testPairSameBaseAndQuoteAssets() {
-        Asset bitcoin1 = Asset.create("btc");
-        Asset bitcoin2 = Asset.create("btc");
+        Asset bitcoin1 = new Asset("btc");
+        Asset bitcoin2 = new Asset("btc");
 
-        Exception exception = assertThrows(PairException.class, () -> {
+        Exception exception = assertThrows(PairNullAssetException.class, () -> {
             new Pair(bitcoin1, bitcoin2);
         });
-        assertEquals("Base asset and quote asset must be differents.", exception.getMessage());
+        assertEquals("Base asset and quote asset must be different.", exception.getMessage());
     }
 }
