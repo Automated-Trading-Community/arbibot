@@ -1,7 +1,8 @@
 package com.arbibot.exceptions;
 
 /**
- * Exception thrown when an {@link com.arbibot.entities.Asset} is missing while creating a Pair.
+ * Exception thrown when an {@link com.arbibot.entities.Asset} is missing when
+ * creating a Pair.
  *
  * @see com.arbibot.entities.Pair
  * @see com.arbibot.entities.Asset
