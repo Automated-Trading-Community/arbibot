@@ -35,6 +35,7 @@ import java.util.UUID;
  * </pre>
  * 
  * @author SChoumiloff
+ * @author SebastienGuillemin
  * @since 1.0
  */
 @Getter
@@ -45,9 +46,6 @@ public class Asset {
     private String name;
 
     /**
-     * Private constructor to create an {@code Asset} instance with a specified
-     * name.
-     * The {@code id} is auto-generated.
      *
      * @param name the name of the asset
      */
