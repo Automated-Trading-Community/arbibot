@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import com.arbibot.entities.Asset;
 import com.arbibot.entities.Pair;
 import com.arbibot.exceptions.PairNullAssetException;
+import com.arbibot.exceptions.PairSameAssetException;
 
 public class PairTest {
 
@@ -55,9 +56,28 @@ public class PairTest {
         Asset bitcoin1 = new Asset("btc");
         Asset bitcoin2 = new Asset("btc");
 
-        Exception exception = assertThrows(PairNullAssetException.class, () -> {
+        Exception exception = assertThrows(PairSameAssetException.class, () -> {
             new Pair(bitcoin1, bitcoin2);
         });
-        assertEquals("Base asset and quote asset must be different.", exception.getMessage());
+        assertEquals("The two assets (" + "btc" + " and " + "btc"
+                + " ) used to create a pair must be different.", exception.getMessage());
+    }
+
+    @Test
+    public void testBaseAssetNull() {
+        Asset nullAsset = null;
+        Asset bitcoin2 = new Asset("btc");
+
+        Exception exception = assertThrows(PairNullAssetException.class, () -> new Pair(nullAsset, bitcoin2));
+        assertEquals("Base asset cannot be null.", exception.getMessage());
+    }
+
+    @Test
+    public void testQuoteAssetNull() {
+        Asset bitcoin1 = new Asset("btc");
+        Asset nullAsset = null;
+
+        Exception exception = assertThrows(PairNullAssetException.class, () -> new Pair(bitcoin1, nullAsset));
+        assertEquals("Quote asset cannot be null.", exception.getMessage());
     }
 }

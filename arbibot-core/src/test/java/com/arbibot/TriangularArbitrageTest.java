@@ -1,6 +1,7 @@
 package com.arbibot;
 
 import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.math.BigDecimal;
@@ -40,8 +41,7 @@ public class TriangularArbitrageTest {
 
         @Override
         public void passOrders(Order[] orders) {
-            System.out.println("Arrding : " + orders.length);
-            for (Order order : orders) 
+            for (Order order : orders)
                 passedOrders.put(order.getPair(), order);
         }
 
@@ -97,61 +97,73 @@ public class TriangularArbitrageTest {
         this.pair3 = new Pair(btc, usdt);
 
         this.exchange = new Exchange("Binance", "https://binance.com", BigDecimal.valueOf(0.1), ExchangeType.CEX);
-                
+
         this.triangularArbitrage = new TriangularArbitrage(this.forExchangeCommunicationStub);
     }
 
     // @Test
     // public void testValidTriangle() {
-    //     assertDoesNotThrow(() -> this.triangularArbitrage.performTriangualarArbitrage(pair1, pair2, pair3, exchange,
-    //             BigDecimal.valueOf(25)));
+    // this.forExchangeCommunicationStub.setPrice(pair1, BigDecimal.valueOf(1980));
+    // this.forExchangeCommunicationStub.setPrice(pair2, BigDecimal.valueOf(0.05));
+    // this.forExchangeCommunicationStub.setPrice(pair3, BigDecimal.valueOf(40000));
+    // assertDoesNotThrow(() ->
+    // triangularArbitrage.performTriangualarArbitrage(pair1, pair2, pair3,
+    // exchange,
+    // BigDecimal.valueOf(25)));
     // }
 
-    // @Test
-    // public void testNotValidTriangle() {
-    //     TriangularArbitragingException error = assertThrows(TriangularArbitragingException.class,
-    //             () -> this.triangularArbitrage.performTriangualarArbitrage(pair2,
-    //                     pair1, pair3, this.exchange, BigDecimal.valueOf(20)));
-    //     assertTrue(error.getMessage().equals("Triangle or asset buy is not valid"));
-    // }
+    @Test
+    public void testNotValidTriangle() {
+        TriangularArbitragingException error = assertThrows(TriangularArbitragingException.class,
+                () -> this.triangularArbitrage.performTriangualarArbitrage(pair2,
+                        pair1, pair3, this.exchange, BigDecimal.valueOf(20)));
+        assertTrue(error.getMessage().equals("Triangle or asset buy is not valid"));
+    }
 
-    // @Test
-    // public void testPricesNullAssert() {
-    //     AssertionError error = assertThrows(AssertionError.class,
-    //             () -> this.triangularArbitrage.performTriangualarArbitrage(pair1, pair2, pair3,
-    //                     this.exchange, BigDecimal.valueOf(20)));
-    //     assertTrue(error.getMessage().equals(pair1.toString() + " price is null"));
-    // }
+    @Test
+    public void testPricesNullAssert() {
+        AssertionError error = assertThrows(AssertionError.class,
+                () -> this.triangularArbitrage.performTriangualarArbitrage(pair1, pair2,
+                        pair3,
+                        this.exchange, BigDecimal.valueOf(20)));
+        assertTrue(error.getMessage().equals(pair1.toString() + " price is null"));
+    }
 
-    // @Test
-    // public void testPricesPair2NullAssert() {
-    //     this.forExchangeCommunicationStub.setPrice(pair1, BigDecimal.valueOf(2503.4));
-    //     AssertionError error = assertThrows(AssertionError.class,
-    //             () -> this.triangularArbitrage.performTriangualarArbitrage(pair1, pair2, pair3,
-    //             this.exchange, BigDecimal.valueOf(20)));
-    //     assertTrue(error.getMessage().equals(pair2.toString() + " price is null"));
-    // }
+    @Test
+    public void testPricesPair2NullAssert() {
+        this.forExchangeCommunicationStub.setPrice(pair1,
+                BigDecimal.valueOf(2503.4));
+        AssertionError error = assertThrows(AssertionError.class,
+                () -> this.triangularArbitrage.performTriangualarArbitrage(pair1, pair2,
+                        pair3,
+                        this.exchange, BigDecimal.valueOf(20)));
+        assertTrue(error.getMessage().equals(pair2.toString() + " price is null"));
+    }
 
-    // @Test
-    // public void testPricesPair3NullAssert() {
-    //     this.forExchangeCommunicationStub.setPrice(pair1, BigDecimal.valueOf(2503.4));
-    //     this.forExchangeCommunicationStub.setPrice(pair2, BigDecimal.valueOf(0.05));
-    //     AssertionError error = assertThrows(AssertionError.class,
-    //             () -> this.triangularArbitrage.performTriangualarArbitrage(pair1, pair2, pair3,
-    //             this.exchange, BigDecimal.valueOf(20)));
-    //     assertTrue(error.getMessage().equals(pair3.toString() + " price is null"));
-    // }
+    @Test
+    public void testPricesPair3NullAssert() {
+        this.forExchangeCommunicationStub.setPrice(pair1,
+                BigDecimal.valueOf(2503.4));
+        this.forExchangeCommunicationStub.setPrice(pair2, BigDecimal.valueOf(0.05));
+        AssertionError error = assertThrows(AssertionError.class,
+                () -> this.triangularArbitrage.performTriangualarArbitrage(pair1, pair2,
+                        pair3,
+                        this.exchange, BigDecimal.valueOf(20)));
+        assertTrue(error.getMessage().equals(pair3.toString() + " price is null"));
+    }
 
-    // @Test
-    // public void testPerformTriangularArbitrageNoOpportunities() throws TriangularArbitragingException {
-    //     this.forExchangeCommunicationStub.setPrice(pair1, BigDecimal.valueOf(2070.4));
-    //     this.forExchangeCommunicationStub.setPrice(pair2, BigDecimal.valueOf(0.05));
-    //     this.forExchangeCommunicationStub.setPrice(pair3, BigDecimal.valueOf(40000.3));
+    @Test
+    public void testPerformTriangularArbitrageNoOpportunities() throws TriangularArbitragingException {
+        this.forExchangeCommunicationStub.setPrice(pair1,
+                BigDecimal.valueOf(2000.0));
+        this.forExchangeCommunicationStub.setPrice(pair2, BigDecimal.valueOf(0.05));
+        this.forExchangeCommunicationStub.setPrice(pair3,
+                BigDecimal.valueOf(40000));
 
-    //     this.triangularArbitrage.performTriangualarArbitrage(pair1, pair2, pair3, this.exchange, BigDecimal.valueOf(20));
-
-    //     assertTrue(this.forExchangeCommunicationStub.getPassedOrders().size() == 0);
-    // }
+        this.triangularArbitrage.performTriangualarArbitrage(pair1, pair2, pair3,
+                this.exchange, BigDecimal.valueOf(20));
+        assertTrue(this.forExchangeCommunicationStub.getPassedOrders().size() == 0);
+    }
 
     @Test
     public void testPerformTriangularArbitrageOpportunitie() throws TriangularArbitragingException {
@@ -159,9 +171,9 @@ public class TriangularArbitrageTest {
         this.forExchangeCommunicationStub.setPrice(pair2, BigDecimal.valueOf(0.05));
         this.forExchangeCommunicationStub.setPrice(pair3, BigDecimal.valueOf(40000));
 
-        this.triangularArbitrage.performTriangualarArbitrage(pair1, pair2, pair3, this.exchange, BigDecimal.valueOf(20));
+        this.triangularArbitrage.performTriangualarArbitrage(pair1, pair2, pair3,
+                this.exchange, BigDecimal.valueOf(20));
 
-        System.out.println(this.forExchangeCommunicationStub.getPassedOrders().size());
         assertTrue(this.forExchangeCommunicationStub.getPassedOrders().size() == 3);
         assertTrue(this.forExchangeCommunicationStub.getPassedOrders().get(pair1).getType().equals(OrderType.BUY));
         assertTrue(this.forExchangeCommunicationStub.getPassedOrders().get(pair2).getType().equals(OrderType.SELL));
