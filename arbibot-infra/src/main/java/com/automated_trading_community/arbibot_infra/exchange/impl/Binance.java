@@ -12,7 +12,7 @@ import com.arbibot.ports.output.ForExchangeCommunication;
 public class Binance implements ForExchangeCommunication {
 
     @Override
-    public void getPriceForPair(Pair pair, Exchange exchange) {
+    public BigDecimal getPriceForPair(Pair pair, Exchange exchange) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'getPriceForPair'");
     }
