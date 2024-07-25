@@ -43,7 +43,6 @@ public class Exchange {
      *
      * @param name         the name of the exchange
      * @param url          the URL of the exchange
-     * @param tradingPairs the list of trading pairs available on the exchange
      * @param fees         the trading fees charged by the exchange
      * @param exchangeType the type of the exchange (e.g., CEX, DEX)
      */

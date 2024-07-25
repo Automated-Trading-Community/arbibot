@@ -1,7 +1,6 @@
 package com.arbibot;
 
 import static org.junit.Assert.assertTrue;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.math.BigDecimal;
@@ -31,12 +30,14 @@ public class TriangularArbitrageTest {
         private Map<Pair, Order> passedOrders = new HashMap<>();
 
         @Override
-        public void getPriceForPair(Pair pair, Exchange exchange) {
+        public BigDecimal getPriceForPair(Pair pair, Exchange exchange) {
             if (prices.containsKey(pair)) {
                 pair.setPrice(prices.get(pair));
             } else {
                 pair.setPrice(null);
             }
+
+            return pair.getPrice();
         }
 
         @Override

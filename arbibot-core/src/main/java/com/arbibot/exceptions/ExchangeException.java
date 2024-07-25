@@ -11,11 +11,11 @@ package com.arbibot.exceptions;
  * It extends the {@code Exception} class and provides a constructor to create
  * an instance with a custom error message.
  * </p>
- * <p>
  *
- * @see com.arbibot.entities.bat.entities.Exchange
+ * @see com.arbibot.entities.Exchange
  * 
  * @author SChoumiloff
+ * @author SebastienGuillemin
  * @since 1.0
  */
 public class ExchangeException extends RuntimeException {

@@ -12,16 +12,13 @@ import com.arbibot.usecases.arbitrage.exceptions.TriangularArbitragingException;
 
 /**
  * The TriangularArbitrage class implements the logic for performing triangular
- * arbitrage
- * on given asset pairs and exchange.
+ * arbitrage on given asset pairs and exchange.
  * <p>
  * Triangular arbitrage involves trading between three different pairs of assets
- * in a
- * cycle to take advantage of discrepancies in their exchange rates. This class
- * validates
- * the triangular relationship, computes implied rates, creates orders, and
- * calculates
- * the associated fees before executing the orders if conditions are favorable.
+ * in a cycle to take advantage of discrepancies in their exchange rates. This
+ * class validates the triangular relationship, computes implied rates, creates
+ * orders, and calculates the associated fees before executing the orders if
+ * conditions are favorable.
  * </p>
  * 
  * @see com.arbibot.ports.output.ForExchangeCommunication
@@ -35,23 +32,15 @@ public class TriangularArbitrage implements ForTriangularArbitraging {
 
     private ForExchangeCommunication forExchangeCommunication;
 
+    /**
+     * 
+     * @param forExchangeDataRecovery dependancy required to retrieve information
+     *                                from exchnages.
+     */
     public TriangularArbitrage(ForExchangeCommunication forExchangeDataRecovery) {
         this.forExchangeCommunication = forExchangeDataRecovery;
     }
 
-    /**
-     * Performs triangular arbitrage on the given assets and exchange.
-     *
-     * @param p1       Initial pair of assets (eg. A/B).
-     * @param p2       Middle pair that serves as a bridge between the first
-     *                 and the third asset (eg. B/C).
-     * @param p3       Final pair the is used to convert the middle asset back
-     *                 to the first asset (eg. (C/A)).
-     * @param exchange The exchange where orders are executed.
-     * @param quantity The quantity of assets to be traded.
-     * @throws TriangularArbitragingException If the triangle or asset buy is not
-     *                                        valid.
-     */
     @Override
     public void performTriangualarArbitrage(Pair p1, Pair p2, Pair p3, Exchange exchange, BigDecimal quantity)
             throws TriangularArbitragingException {
