@@ -69,9 +69,6 @@ public class TriangularArbitrage implements ForTriangularArbitraging {
             if (impliedRate.compareTo(p1.getPrice()) > 0) {
                 Order[] orders = this.createOrders(p1, p2, p3, exchange, quantity);
                 BigDecimal fees = this.computeFeesForBuyCurrency(orders);
-                // if (fees.add(impliedRate).compareTo(p1.getPrice()) < 0) { // @SGuillemin il y
-                // avait une erreur ici. (On doit soustraire les fees au tci pour avoir le
-                // résultat et pas les ajouter)
                 if (impliedRate.subtract(fees).compareTo(p1.getPrice()) > 0) {
                     this.passOrders(orders);
                     // BigDecimal variation = this.computeVaritation(p1.getPrice(), impliedRate);
