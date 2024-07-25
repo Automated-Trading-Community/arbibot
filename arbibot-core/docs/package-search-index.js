@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"com.arbibot.entities"},{"l":"com.arbibot.exceptions"},{"l":"com.arbibot.ports.input"},{"l":"com.arbibot.ports.output"},{"l":"com.arbibot.usecases.arbitrage"},{"l":"com.arbibot.usecases.arbitrage.exceptions"}];updateSearchResults();
