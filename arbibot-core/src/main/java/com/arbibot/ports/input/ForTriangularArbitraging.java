@@ -8,6 +8,10 @@ import com.arbibot.entities.Exchange;
 
 /**
  * Interface exposing methods to perform triangular arbitrage.
+ * 
+ * @author SChoumiloff
+ * @author SebastienGuillemin
+ * @since 1.0
  */
 public interface ForTriangularArbitraging {
 
@@ -20,9 +24,9 @@ public interface ForTriangularArbitraging {
      * @param p3       Final pair the is used to convert the middle asset back
      *                 to the first asset (eg. (C/A)).
      * @param exchange The exchange where orders are executed.
-     * @param quantity
+     * @param quantity Th equantity to buy with the first order of the arbitrage.
      * 
-     * @throws TriangularArbitragingException
+     * @throws TriangularArbitragingException is an error occurs during the arbitrage.
      */
     void performTriangualarArbitrage(Pair p1, Pair p2, Pair p3, Exchange exchange, BigDecimal quantity)
             throws TriangularArbitragingException;

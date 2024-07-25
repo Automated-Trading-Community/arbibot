@@ -6,7 +6,8 @@ import lombok.Setter;
 import java.math.BigDecimal;
 import java.util.UUID;
 
-import com.arbibot.exceptions.PairException;
+import com.arbibot.exceptions.PairNullAssetException;
+import com.arbibot.exceptions.PairSameAssetException;
 
 /**
  * The {@code Pair} class represents a trading pair consisting of two financial
@@ -35,6 +36,7 @@ import com.arbibot.exceptions.PairException;
  * </pre>
  * 
  * @author SChoumiloff
+ * @author SebastienGuillemin
  * @since 1.0
  * 
  */
@@ -48,25 +50,28 @@ public class Pair {
     private BigDecimal price;
 
     /**
-     * Constructs a {@code Pair} with the specified base asset and quote asset.
-     * The {@code id} is auto-generated to ensure uniqueness.
-     *
      * @param baseAsset  the primary asset in the trading pair
      * @param quoteAsset the asset in which the value of the base asset is quoted
      */
     public Pair(Asset baseAsset, Asset quoteAsset) {
-        if (baseAsset.getName().equalsIgnoreCase(quoteAsset.getName())) {
-            throw new PairException("Base asset and quote asset must be differents.");
-        }
+        if (baseAsset == null)
+            throw new PairNullAssetException("Base asset cannot be null.");
+
+        if (quoteAsset == null)
+            throw new PairNullAssetException("Quote asset cannot be null.");
+
+        if (baseAsset.equals(quoteAsset))
+            throw new PairSameAssetException(baseAsset, quoteAsset);
+
         this.baseAsset = baseAsset;
         this.quoteAsset = quoteAsset;
     }
 
     /**
      * 
-     * @param baseAsset
-     * @param quoteAsset
-     * @param price
+     * @param baseAsset  the primary asset in the trading pair
+     * @param quoteAsset the asset in which the value of the base asset is quoted
+     * @param price      current price of the pair.
      */
     public Pair(Asset baseAsset, Asset quoteAsset, BigDecimal price) {
         this(baseAsset, quoteAsset);
@@ -83,6 +88,6 @@ public class Pair {
 
     @Override
     public String toString() {
-        return baseAsset.getName() + "/" + quoteAsset.getName() + this.price != null ? " (" + this.price + ")" : "";
+        return baseAsset.getName() + "/" + quoteAsset.getName() + (this.price != null ? " (" + this.price + ")" : "");
     }
 }

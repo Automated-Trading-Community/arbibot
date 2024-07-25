@@ -1,6 +1,7 @@
 package com.arbibot.entities;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -17,86 +18,65 @@ import lombok.Setter;
  * @see com.arbibot.entities.OrderType
  * @see com.arbibot.entities.OrderStatus
  * 
- * @author SGuillemin
  * @author SChoumiloff
- * 
+ * @author SebastienGuillemin
  * @since 1.0
  */
+
 @Getter
 public class Order {
-
-    public enum Reference {
-        QUOTE,
-        BASE
-    }
+    // TODO : Use the step-size to determine ROUNDING_SCALE ?
+    private static final int ROUNDING_SCALE = 8;
 
     private Pair pair;
     private OrderType type;
 
     @Setter
     private OrderStatus status;
+
     @Setter
     private BigDecimal fees;
-    @Setter
-    private BigDecimal executedQuantityBaseAsset;
-    @Setter
-    private BigDecimal executedQuantityQuoteAsset;
 
-    private BigDecimal qttQuoteAsset;
-    private BigDecimal qttBaseAsset;
-    private Reference reference;
-    private BigDecimal currentPairPrice;
+    @Setter
+    private BigDecimal executedQuantity;
+    private BigDecimal quantity;
     private BigDecimal percentFees;
 
     /**
      * 
-     * constructor
+     * Constructor
      * 
-     * @param pair
-     * @param type
-     * @param quantity
-     * @param reference
-     * @param currentPairPrice
-     * @param percentFees
+     * @param pair        the pair on which the order is taken.
+     * @param type        Buy or Sell.
+     * @param quantity    The quantity to buy or to sell. If {@code type} is
+     *                    BUY then the quantity is expressed in quote asset,
+     *                    otherwise it is expressed in base asset.
+     * @param percentFees percentage of the the wuantoty taken as fees.
      */
     public Order(Pair pair, OrderType type, BigDecimal quantity, BigDecimal percentFees) {
         this.pair = pair;
         this.type = type;
-        this.currentPairPrice = pair.getPrice();
         this.percentFees = percentFees;
+        this.quantity = quantity;
 
-        switch (type) {
-            case BUY:
-                this.qttQuoteAsset = quantity;
-                this.qttBaseAsset = qttQuoteAsset.divide(currentPairPrice);
-                break;
-            case SELL:
-                this.qttBaseAsset = quantity;
-                this.qttQuoteAsset = qttBaseAsset.multiply(currentPairPrice);
-                break;
-        }
         this.computeFees();
         this.computeExecuted();
     }
 
     /**
-     * Computes the fees for base asset (if buy) or quote asset (if sell)
+     * Computes the fees for base asset (if buy) or quote asset (if sell).
+     * 
      */
     private void computeFees() {
         switch (this.type) {
             case BUY:
-                // Dans le cas d'un ordre d'achat les frais sont payés suivant le baseAsset
-                // Exemple j'achete 1 btc sur la paire btc/usdt avec des frais de 0.1% alors je
-                // vais payer
-                // 1 * 0.001 = 0.001 btc
-                this.fees = this.qttBaseAsset.multiply(this.percentFees.divide(BigDecimal.valueOf(100)));
+                this.fees = this.quantity.divide(this.pair.getPrice(), ROUNDING_SCALE, RoundingMode.HALF_UP).multiply(
+                        this.percentFees.divide(BigDecimal.valueOf(100.0), ROUNDING_SCALE, RoundingMode.HALF_UP));
                 break;
+
             case SELL:
-                // Dans le cas d'un ordre de vente les frais sont payés suivant le quoteAsset
-                // Exemple je vends 1 btc sur la paire btc/usdt avec des frais de 0.1% alors je
-                // vais payer priceUSDT * 0.001 de frais
-                // Si btc/usdt = 40000 je vais payer 40 USDT de frais
-                this.fees = this.qttQuoteAsset.multiply(this.percentFees.divide(BigDecimal.valueOf(100)));
+                this.fees = this.quantity.multiply(this.pair.getPrice()).multiply(
+                        this.percentFees.divide(BigDecimal.valueOf(100.0), ROUNDING_SCALE, RoundingMode.HALF_UP));
                 break;
         }
     }
@@ -107,12 +87,12 @@ public class Order {
     private void computeExecuted() {
         switch (this.type) {
             case BUY:
-                this.executedQuantityBaseAsset = this.qttBaseAsset.subtract(this.fees);
-                this.executedQuantityQuoteAsset = this.executedQuantityBaseAsset.multiply(this.currentPairPrice);
+                this.executedQuantity = this.quantity.divide(this.pair.getPrice(), ROUNDING_SCALE, RoundingMode.HALF_UP)
+                        .subtract(this.fees);
                 break;
+
             case SELL:
-                this.executedQuantityQuoteAsset = this.qttQuoteAsset.subtract(fees);
-                this.executedQuantityBaseAsset = this.executedQuantityQuoteAsset.divide(this.currentPairPrice);
+                this.executedQuantity = this.quantity.multiply(this.pair.getPrice()).subtract(this.fees);
                 break;
         }
     }

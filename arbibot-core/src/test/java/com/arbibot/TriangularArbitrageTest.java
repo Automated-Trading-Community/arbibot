@@ -1,177 +1,186 @@
-// package com.arbibot;
+package com.arbibot;
 
-// import static org.junit.Assert.assertTrue;
-// import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-// import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-// import java.math.BigDecimal;
-// import java.util.Arrays;
-// import java.util.HashMap;
-// import java.util.List;
-// import java.util.Map;
+import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-// import org.junit.jupiter.api.Test;
-// import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-// import com.arbibot.entities.Asset;
-// import com.arbibot.entities.Exchange;
-// import com.arbibot.entities.ExchangeType;
-// import com.arbibot.entities.Order;
-// import com.arbibot.entities.OrderType;
-// import com.arbibot.entities.Pair;
-// import com.arbibot.ports.output.ForExchangeCommunication;
-// import com.arbibot.usecases.arbitrage.TriangularArbitrage;
-// import com.arbibot.usecases.arbitrage.exceptions.TriangularArbitragingException;
+import com.arbibot.entities.Asset;
+import com.arbibot.entities.Exchange;
+import com.arbibot.entities.ExchangeType;
+import com.arbibot.entities.Order;
+import com.arbibot.entities.OrderType;
+import com.arbibot.entities.Pair;
+import com.arbibot.ports.output.ForExchangeCommunication;
+import com.arbibot.usecases.arbitrage.TriangularArbitrage;
+import com.arbibot.usecases.arbitrage.exceptions.TriangularArbitragingException;
 
-// public class TriangularArbitrageTest {
-//     /**
-//      * Stub used to perform test independently of the exchange.
-//      */
-//     private class ForExchangeCommunicationStub implements ForExchangeCommunication {
-//         private Map<Pair, BigDecimal> prices = new HashMap<>();
-//         private Map<Pair, Order> passedOrders = new HashMap<>();
+public class TriangularArbitrageTest {
+    /**
+     * Stub used to perform test independently of the exchange.
+     */
+    private class ForExchangeCommunicationStub implements ForExchangeCommunication {
+        private Map<Pair, BigDecimal> prices = new HashMap<>();
+        private Map<Pair, Order> passedOrders = new HashMap<>();
 
-//         @Override
-//         public void getPriceForPair(Pair pair, Exchange exchange) {
-//             if (prices.containsKey(pair)) {
-//                 pair.setPrice(prices.get(pair));
-//             } else {
-//                 pair.setPrice(null);
-//             }
-//         }
+        @Override
+        public BigDecimal getPriceForPair(Pair pair, Exchange exchange) {
+            if (prices.containsKey(pair)) {
+                pair.setPrice(prices.get(pair));
+            } else {
+                pair.setPrice(null);
+            }
 
-//         @Override
-//         public void passOrders(Order[] orders) {
-//             for (Order order : orders) {
-//                 passedOrders.put(order.getPair(), order);
-//             }
-//         }
+            return pair.getPrice();
+        }
 
-//         public void setPrice(Pair pair, BigDecimal price) {
-//             prices.put(pair, price);
-//         }
+        @Override
+        public void passOrders(Order[] orders) {
+            for (Order order : orders)
+                passedOrders.put(order.getPair(), order);
+        }
 
-//         public Map<Pair, Order> getPassedOrders() {
-//             return passedOrders;
-//         }
+        public void setPrice(Pair pair, BigDecimal price) {
+            prices.put(pair, price);
+            pair.setPrice(price);
+        }
 
-//         @Override
-//         public BigDecimal getBalanceForAsset(Asset asset, Exchange exchange) {
-//             // TODO Auto-generated method stub
-//             throw new UnsupportedOperationException("Unimplemented method 'getBalanceForAsset'");
-//         }
+        public Map<Pair, Order> getPassedOrders() {
+            return passedOrders;
+        }
 
-//         @Override
-//         public Order getOrderInfo(String orderId, Exchange exchange) {
-//             // TODO Auto-generated method stub
-//             throw new UnsupportedOperationException("Unimplemented method 'getOrderInfo'");
-//         }
+        @Override
+        public BigDecimal getBalanceForAsset(Asset asset, Exchange exchange) {
+            // TODO Auto-generated method stub
+            throw new UnsupportedOperationException("Unimplemented method 'getBalanceForAsset'");
+        }
 
-//         @Override
-//         public List<Pair> getAvailableTradingPairs(Exchange exchange) {
-//             // TODO Auto-generated method stub
-//             throw new UnsupportedOperationException("Unimplemented method 'getAvailableTradingPairs'");
-//         }
-//     }
+        @Override
+        public Order getOrderInfo(String orderId, Exchange exchange) {
+            // TODO Auto-generated method stub
+            throw new UnsupportedOperationException("Unimplemented method 'getOrderInfo'");
+        }
 
-//     private ForExchangeCommunicationStub forExchangeCommunicationStub;
-//     private Exchange exchange;
-//     private TriangularArbitrage triangularArbitrage;
+        @Override
+        public List<Pair> getAvailableTradingPairs(Exchange exchange) {
+            // TODO Auto-generated method stub
+            throw new UnsupportedOperationException("Unimplemented method 'getAvailableTradingPairs'");
+        }
+    }
 
-//     private Pair pair1;
-//     private Pair pair2;
-//     private Pair pair3;
+    private ForExchangeCommunicationStub forExchangeCommunicationStub;
+    private Exchange exchange;
+    private TriangularArbitrage triangularArbitrage;
 
-//     private Asset btc;
-//     private Asset eth;
-//     private Asset usdt;
+    private Pair pair1;
+    private Pair pair2;
+    private Pair pair3;
 
-//     private List<Pair> cexPairs;
+    private Asset btc;
+    private Asset eth;
+    private Asset usdt;
 
-//     @BeforeEach
-//     public void setUp() {
-//         this.forExchangeCommunicationStub = new ForExchangeCommunicationStub();
-//         btc = Asset.create("BTC");
-//         eth = Asset.create("ETH");
-//         usdt = Asset.create("USDT");
+    @BeforeEach
+    public void setUp() {
+        this.forExchangeCommunicationStub = new ForExchangeCommunicationStub();
+        this.btc = new Asset("BTC");
+        this.eth = new Asset("ETH");
+        this.usdt = new Asset("USDT");
 
-//         pair1 = new Pair(eth, usdt);
-//         pair2 = new Pair(eth, btc);
-//         pair3 = new Pair(btc, usdt);
-//         cexPairs = Arrays.asList(pair1, pair2, pair3);
-//         this.exchange = new Exchange("Binance", "https://binance.com", cexPairs, BigDecimal.valueOf(0.1), usdt,
-//                 ExchangeType.CEX);
+        this.pair1 = new Pair(eth, usdt);
+        this.pair2 = new Pair(eth, btc);
+        this.pair3 = new Pair(btc, usdt);
 
-//         triangularArbitrage = new TriangularArbitrage(this.forExchangeCommunicationStub);
-//     }
+        this.exchange = new Exchange("Binance", "https://binance.com", BigDecimal.valueOf(0.1), ExchangeType.CEX);
 
-//     @Test
-//     public void testValidTriangle() {
+        this.triangularArbitrage = new TriangularArbitrage(this.forExchangeCommunicationStub);
+    }
 
-//         assertDoesNotThrow(() -> triangularArbitrage.performTriangualarArbitrage(pair1, pair2, pair3, exchange,
-//                 BigDecimal.valueOf(25)));
-//     }
+    // @Test
+    // public void testValidTriangle() {
+    // this.forExchangeCommunicationStub.setPrice(pair1, BigDecimal.valueOf(1980));
+    // this.forExchangeCommunicationStub.setPrice(pair2, BigDecimal.valueOf(0.05));
+    // this.forExchangeCommunicationStub.setPrice(pair3, BigDecimal.valueOf(40000));
+    // assertDoesNotThrow(() ->
+    // triangularArbitrage.performTriangualarArbitrage(pair1, pair2, pair3,
+    // exchange,
+    // BigDecimal.valueOf(25)));
+    // }
 
-//     @Test
-//     public void testNotValidTriangle() {
-//         TriangularArbitragingException error = assertThrows(TriangularArbitragingException.class,
-//                 () -> triangularArbitrage.performTriangualarArbitrage(pair2,
-//                         pair1, pair3, exchange, BigDecimal.valueOf(20)));
-//         assertTrue(error.getMessage().equals("Triangle or asset buy is not valid"));
-//     }
+    @Test
+    public void testNotValidTriangle() {
+        TriangularArbitragingException error = assertThrows(TriangularArbitragingException.class,
+                () -> this.triangularArbitrage.performTriangualarArbitrage(pair2,
+                        pair1, pair3, this.exchange, BigDecimal.valueOf(20)));
+        assertTrue(error.getMessage().equals("Triangle or asset buy is not valid"));
+    }
 
-//     @Test
-//     public void testPricesNullAssert() {
-//         AssertionError error = assertThrows(AssertionError.class,
-//                 () -> triangularArbitrage.performTriangualarArbitrage(pair1, pair2, pair3,
-//                         exchange, BigDecimal.valueOf(20)));
-//         assertTrue(error.getMessage().equals(pair1.toString() + " price is null"));
-//     }
+    @Test
+    public void testPricesNullAssert() {
+        AssertionError error = assertThrows(AssertionError.class,
+                () -> this.triangularArbitrage.performTriangualarArbitrage(pair1, pair2,
+                        pair3,
+                        this.exchange, BigDecimal.valueOf(20)));
+        assertTrue(error.getMessage().equals(pair1.toString() + " price is null"));
+    }
 
-//     @Test
-//     public void testPricesPair2NullAssert() {
-//         this.forExchangeCommunicationStub.setPrice(pair1, BigDecimal.valueOf(2503.4));
-//         AssertionError error = assertThrows(AssertionError.class,
-//                 () -> triangularArbitrage.performTriangualarArbitrage(pair1, pair2, pair3,
-//                         exchange, BigDecimal.valueOf(20)));
-//         assertTrue(error.getMessage().equals(pair2.toString() + " price is null"));
-//     }
+    @Test
+    public void testPricesPair2NullAssert() {
+        this.forExchangeCommunicationStub.setPrice(pair1,
+                BigDecimal.valueOf(2503.4));
+        AssertionError error = assertThrows(AssertionError.class,
+                () -> this.triangularArbitrage.performTriangualarArbitrage(pair1, pair2,
+                        pair3,
+                        this.exchange, BigDecimal.valueOf(20)));
+        assertTrue(error.getMessage().equals(pair2.toString() + " price is null"));
+    }
 
-//     @Test
-//     public void testPricesPair3NullAssert() {
-//         this.forExchangeCommunicationStub.setPrice(pair1, BigDecimal.valueOf(2503.4));
-//         this.forExchangeCommunicationStub.setPrice(pair2, BigDecimal.valueOf(0.05));
-//         AssertionError error = assertThrows(AssertionError.class,
-//                 () -> triangularArbitrage.performTriangualarArbitrage(pair1, pair2, pair3,
-//                         exchange, BigDecimal.valueOf(20)));
-//         assertTrue(error.getMessage().equals(pair3.toString() + " price is null"));
-//     }
+    @Test
+    public void testPricesPair3NullAssert() {
+        this.forExchangeCommunicationStub.setPrice(pair1,
+                BigDecimal.valueOf(2503.4));
+        this.forExchangeCommunicationStub.setPrice(pair2, BigDecimal.valueOf(0.05));
+        AssertionError error = assertThrows(AssertionError.class,
+                () -> this.triangularArbitrage.performTriangualarArbitrage(pair1, pair2,
+                        pair3,
+                        this.exchange, BigDecimal.valueOf(20)));
+        assertTrue(error.getMessage().equals(pair3.toString() + " price is null"));
+    }
 
-//     @Test
-//     public void testPerformTriangularArbitrageNoOpportunities() throws TriangularArbitragingException {
-//         this.forExchangeCommunicationStub.setPrice(pair1, BigDecimal.valueOf(2070.4));
-//         this.forExchangeCommunicationStub.setPrice(pair2, BigDecimal.valueOf(0.05));
-//         this.forExchangeCommunicationStub.setPrice(pair3, BigDecimal.valueOf(40000.3));
+    @Test
+    public void testPerformTriangularArbitrageNoOpportunities() throws TriangularArbitragingException {
+        this.forExchangeCommunicationStub.setPrice(pair1,
+                BigDecimal.valueOf(2000.0));
+        this.forExchangeCommunicationStub.setPrice(pair2, BigDecimal.valueOf(0.05));
+        this.forExchangeCommunicationStub.setPrice(pair3,
+                BigDecimal.valueOf(40000));
 
-//         triangularArbitrage.performTriangualarArbitrage(pair1, pair2, pair3,
-//                 exchange, BigDecimal.valueOf(20));
-//         assertTrue(this.forExchangeCommunicationStub.getPassedOrders().size() == 0);
-//     }
+        this.triangularArbitrage.performTriangualarArbitrage(pair1, pair2, pair3,
+                this.exchange, BigDecimal.valueOf(20));
+        assertTrue(this.forExchangeCommunicationStub.getPassedOrders().size() == 0);
+    }
 
-//     @Test
-//     public void testPerformTriangularArbitrageOpportunitie() throws TriangularArbitragingException {
-//         this.forExchangeCommunicationStub.setPrice(pair1, BigDecimal.valueOf(1980));
-//         this.forExchangeCommunicationStub.setPrice(pair2, BigDecimal.valueOf(0.05));
-//         this.forExchangeCommunicationStub.setPrice(pair3, BigDecimal.valueOf(40000));
+    @Test
+    public void testPerformTriangularArbitrageOpportunitie() throws TriangularArbitragingException {
+        this.forExchangeCommunicationStub.setPrice(pair1, BigDecimal.valueOf(1980));
+        this.forExchangeCommunicationStub.setPrice(pair2, BigDecimal.valueOf(0.05));
+        this.forExchangeCommunicationStub.setPrice(pair3, BigDecimal.valueOf(40000));
 
-//         triangularArbitrage.performTriangualarArbitrage(pair3, pair2, pair1, exchange, BigDecimal.valueOf(20));
+        this.triangularArbitrage.performTriangualarArbitrage(pair1, pair2, pair3,
+                this.exchange, BigDecimal.valueOf(20));
 
-//         assertTrue(this.forExchangeCommunicationStub.getPassedOrders().get(pair1).getType().equals(OrderType.BUY));
-//         assertTrue(this.forExchangeCommunicationStub.getPassedOrders().get(pair1).getType().equals(OrderType.SELL));
-//         assertTrue(this.forExchangeCommunicationStub.getPassedOrders().get(pair1).getType().equals(OrderType.SELL));
-//         assertTrue(this.forExchangeCommunicationStub.getPassedOrders().size() == 3);
+        assertTrue(this.forExchangeCommunicationStub.getPassedOrders().size() == 3);
+        assertTrue(this.forExchangeCommunicationStub.getPassedOrders().get(pair1).getType().equals(OrderType.BUY));
+        assertTrue(this.forExchangeCommunicationStub.getPassedOrders().get(pair2).getType().equals(OrderType.SELL));
+        assertTrue(this.forExchangeCommunicationStub.getPassedOrders().get(pair3).getType().equals(OrderType.SELL));
 
-//         // TODO tester si les ordres ont été rempli mais je ne vois pas trop comment
-//         // tester cette fonctionnalité...
-//     }
-// }
+        // TODO tester si les ordres ont été rempli mais je ne vois pas trop comment
+        // tester cette fonctionnalité...
+    }
+}
