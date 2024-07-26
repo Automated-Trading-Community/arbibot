@@ -6,9 +6,9 @@ import com.arbibot.entities.Exchange;
 import com.arbibot.entities.Order;
 import com.arbibot.entities.OrderType;
 import com.arbibot.entities.Pair;
+import com.arbibot.exceptions.TriangularArbitragingException;
 import com.arbibot.ports.input.ForTriangularArbitraging;
 import com.arbibot.ports.output.ForExchangeCommunication;
-import com.arbibot.usecases.arbitrage.exceptions.TriangularArbitragingException;
 
 /**
  * The TriangularArbitrage class implements the logic for performing triangular

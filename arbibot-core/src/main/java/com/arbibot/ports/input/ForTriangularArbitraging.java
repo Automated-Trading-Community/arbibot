@@ -3,7 +3,7 @@ package com.arbibot.ports.input;
 import java.math.BigDecimal;
 
 import com.arbibot.entities.Pair;
-import com.arbibot.usecases.arbitrage.exceptions.TriangularArbitragingException;
+import com.arbibot.exceptions.TriangularArbitragingException;
 import com.arbibot.entities.Exchange;
 
 /**

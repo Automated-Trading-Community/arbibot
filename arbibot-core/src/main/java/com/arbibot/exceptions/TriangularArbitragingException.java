@@ -1,4 +1,4 @@
-package com.arbibot.usecases.arbitrage.exceptions;
+package com.arbibot.exceptions;
 
 /**
  * Error thrown if an error occurs when performing triangular arbitrage.
