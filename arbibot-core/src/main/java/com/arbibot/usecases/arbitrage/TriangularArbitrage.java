@@ -6,7 +6,6 @@ import com.arbibot.entities.Exchange;
 import com.arbibot.entities.Order;
 import com.arbibot.entities.OrderType;
 import com.arbibot.entities.Pair;
-import com.arbibot.entities.Order.Reference;
 import com.arbibot.ports.input.ForTriangularArbitraging;
 import com.arbibot.ports.output.ForExchangeCommunication;
 import com.arbibot.usecases.arbitrage.exceptions.TriangularArbitragingException;
