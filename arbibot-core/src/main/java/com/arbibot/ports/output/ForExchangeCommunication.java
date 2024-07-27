@@ -33,7 +33,7 @@ public interface ForExchangeCommunication {
      * @param exchange The exchange to get the balance from.
      * @return {@code BigDecimal} The balance of the asset.
      */
-    BigDecimal getBalanceForAsset(Asset asset, Exchange exchange);
+    BigDecimal getBalanceForAsset(Asset asset, Exchange exchange) throws Exception;
 
     /**
      * Retrieve information about a specific order.
