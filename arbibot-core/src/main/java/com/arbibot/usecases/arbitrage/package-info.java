@@ -1,4 +1,4 @@
 /**
- * Contains the arbitrage use cases related.
+ * Contains the arbitrage use cases.
  */
 package com.arbibot.usecases.arbitrage;

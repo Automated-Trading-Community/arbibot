@@ -18,16 +18,17 @@ public interface ForTriangularArbitraging {
     /**
      * Method to perform triangular arbitrage.
      * 
-     * @param p1       Initial pair of assets (eg. A/B).
-     * @param p2       Middle pair that serves as a bridge between the first
+     * @param pair1    Initial pair of assets (eg. A/B).
+     * @param pair2    Middle pair that serves as a bridge between the first
      *                 and the third asset (eg. B/C).
-     * @param p3       Final pair the is used to convert the middle asset back
+     * @param pair3    Final pair the is used to convert the middle asset back
      *                 to the first asset (eg. (C/A)).
      * @param exchange The exchange where orders are executed.
      * @param quantity Th equantity to buy with the first order of the arbitrage.
      * 
-     * @throws TriangularArbitragingException is an error occurs during the arbitrage.
+     * @throws TriangularArbitragingException is an error occurs during the
+     *                                        arbitrage.
      */
-    void performTriangualarArbitrage(Pair p1, Pair p2, Pair p3, Exchange exchange, BigDecimal quantity)
+    void performTriangualarArbitrage(Pair pair1, Pair pair2, Pair pair3, Exchange exchange, BigDecimal quantity)
             throws TriangularArbitragingException;
 }

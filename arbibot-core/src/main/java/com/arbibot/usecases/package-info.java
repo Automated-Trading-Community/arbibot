@@ -1,5 +1,5 @@
 /**
- * Contains the use cases implementing of the input ports.
+ * Contains the use cases implementing the input ports.
  * 
  * @see com.arbibot.ports.input
  */

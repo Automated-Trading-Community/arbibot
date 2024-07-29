@@ -1,5 +1,5 @@
 /**
- * Contains the interfaces exposing methods for input and output ports.
+ * Contains the interfaces exposing input and output ports methods.
  * 
  * @see com.arbibot.ports.input
  * @see com.arbibot.ports.output
