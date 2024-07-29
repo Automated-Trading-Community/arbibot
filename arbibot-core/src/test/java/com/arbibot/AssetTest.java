@@ -11,19 +11,19 @@ public class AssetTest {
     @Test
     public void testAssetCreation() {
         String assetName = "BTC";
-        Asset asset = Asset.create(assetName);
+        Asset asset = new Asset(assetName);
 
-        assertNotNull(asset.getId(), "The asset ID should not be null");
-        assertEquals(assetName, asset.getName(), "The asset name should match the input name");
+        assertNotNull(asset.getId(), "The asset ID should not be null.");
+        assertEquals(assetName, asset.getName(), "The asset name should match the input name.");
     }
 
     @Test
     public void testUniqueAssetId() {
-        Asset asset1 = Asset.create("BTC");
-        Asset asset2 = Asset.create("ETH");
+        Asset asset1 = new Asset("BTC");
+        Asset asset2 = new Asset("ETH");
 
-        assertNotNull(asset1.getId(), "The first asset ID should not be null");
-        assertNotNull(asset2.getId(), "The second asset ID should not be null");
+        assertNotNull(asset1.getId(), "The first asset ID should not be null.");
+        assertNotNull(asset2.getId(), "The second asset ID should not be null.");
         assertNotEquals(asset1.getId(), asset2.getId(), "The asset IDs should be unique");
     }
 
@@ -31,12 +31,12 @@ public class AssetTest {
     public void testSetName() {
         String initialName = "BTC";
         String newName = "ETH";
-        Asset asset = Asset.create(initialName);
+        Asset asset = new Asset(initialName);
 
-        assertEquals(initialName, asset.getName(), "The asset name should be initially set to the input name");
+        assertEquals(initialName, asset.getName(), "The asset name should be initially set to the input name.");
 
         asset.setName(newName);
-        assertEquals(newName, asset.getName(), "The asset name should be updated to the new name");
+        assertEquals(newName, asset.getName(), "The asset name should be updated to the new name.");
     }
 
 }

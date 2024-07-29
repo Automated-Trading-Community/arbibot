@@ -66,12 +66,10 @@ public class TriangularArbitrage implements ForTriangularArbitraging {
             assert p3.getPrice() != null : p3.toString() + " price is null";
 
             BigDecimal impliedRate = this.computeImpliedRate(p2.getPrice(), p3.getPrice());
-
-            if (impliedRate.compareTo(p1.getPrice()) < 0) {
+            if (impliedRate.compareTo(p1.getPrice()) > 0) {
                 Order[] orders = this.createOrders(p1, p2, p3, exchange, quantity);
                 BigDecimal fees = this.computeFeesForBuyCurrency(orders);
-                
-                if (fees.add(impliedRate).compareTo(p1.getPrice()) < 0) {
+                if (impliedRate.subtract(fees).compareTo(p1.getPrice()) > 0) {
                     this.passOrders(orders);
                     // BigDecimal variation = this.computeVaritation(p1.getPrice(), impliedRate);
                     // Ajouter une condition supplémentaire en mode si variation sup a 0.5 % alors
@@ -120,9 +118,9 @@ public class TriangularArbitrage implements ForTriangularArbitraging {
     private Order[] createOrders(Pair p1, Pair p2, Pair p3, Exchange exchange, BigDecimal quantity) {
         Order[] orders = new Order[3];
         orders[0] = new Order(p1, OrderType.BUY, quantity, exchange.getFees());
-        orders[1] = new Order(p2, OrderType.SELL, orders[0].getExecutedQuantityBaseAsset(),
+        orders[1] = new Order(p2, OrderType.SELL, orders[0].getExecutedQuantity(),
                 exchange.getFees());
-        orders[2] = new Order(p3, OrderType.SELL, orders[1].getExecutedQuantityQuoteAsset(),
+        orders[2] = new Order(p3, OrderType.SELL, orders[1].getExecutedQuantity(),
                 exchange.getFees());
 
         return orders;
@@ -139,6 +137,7 @@ public class TriangularArbitrage implements ForTriangularArbitraging {
         feesOrder1 = orders[0].getFees().multiply(orders[0].getPair().getPrice());
         feesOrder2 = orders[1].getFees().multiply(orders[2].getPair().getPrice());
         feesOrder3 = orders[2].getFees();
+
         return feesOrder1.add(feesOrder2).add(feesOrder3);
     }
 
@@ -151,7 +150,9 @@ public class TriangularArbitrage implements ForTriangularArbitraging {
         this.forExchangeCommunication.passOrders(orders);
     }
 
-    // private BigDecimal computeVaritation(BigDecimal initPrice, BigDecimal finalPrice) {
-    //     return ((finalPrice.subtract(initPrice)).divide(initPrice)).multiply(BigDecimal.valueOf(100));
+    // private BigDecimal computeVaritation(BigDecimal initPrice, BigDecimal
+    // finalPrice) {
+    // return
+    // ((finalPrice.subtract(initPrice)).divide(initPrice)).multiply(BigDecimal.valueOf(100));
     // }
 }

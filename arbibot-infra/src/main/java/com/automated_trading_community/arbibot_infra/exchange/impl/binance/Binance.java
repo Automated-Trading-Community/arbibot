@@ -1,5 +1,6 @@
 package com.automated_trading_community.arbibot_infra.exchange.impl.binance;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -7,6 +8,9 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,8 +21,10 @@ import com.arbibot.entities.Order;
 import com.arbibot.entities.Pair;
 import com.arbibot.ports.output.ForExchangeCommunication;
 import com.automated_trading_community.arbibot_infra.exchange.impl.binance.exceptions.BinanceDeserializerException;
+import com.automated_trading_community.arbibot_infra.exchange.impl.binance.factories.BinanceEventFactory;
 import com.automated_trading_community.arbibot_infra.exchange.impl.binance.models.AssetBinance;
 import com.automated_trading_community.arbibot_infra.exchange.impl.binance.models.MiniTicker;
+import com.automated_trading_community.arbibot_infra.exchange.impl.binance.models.UserDataEventBinance;
 import com.binance.connector.client.WebSocketStreamClient;
 import com.binance.connector.client.enums.DefaultUrls;
 import com.binance.connector.client.impl.SpotClientImpl;
@@ -32,11 +38,22 @@ public class Binance implements ForExchangeCommunication {
     private Map<String, Integer> sockets = new HashMap<>();
     private SpotClientImpl clientSpot;
     private WebSocketStreamClient wsClient;
+    private Integer socketUserStreamId = null;
 
+    private BufferEvent<UserDataEventBinance> userEvents; // TODO define type for userEventList
+
+    /**
+     * Initializes the Binance exchange with the given API key and secret.
+     * it also call manageWebSocketForUserEvent to listen to user events
+     * 
+     * @param apiKey
+     * @param apiSecret
+     */
     public Binance(@Value("${binance.api.key}") String apiKey,
             @Value("${binance.api.secret}") String apiSecret) {
         this.clientSpot = new SpotClientImpl(apiKey, apiSecret);
         this.wsClient = new WebSocketStreamClientImpl(DefaultUrls.WS_URL);
+        this.manageWebSocketForUserEvent();
     }
 
     /**
@@ -73,6 +90,7 @@ public class Binance implements ForExchangeCommunication {
         // cette classe et ensuite se brancher sur la
         // websocket listenUserStream. La websocket est a renouveller toutes les heures
         // (60 minutes)
+        // use userEventList
         throw new UnsupportedOperationException("Unimplemented method 'passOrders'");
     }
 
@@ -153,6 +171,38 @@ public class Binance implements ForExchangeCommunication {
                 null);
         // TODO define onFailureCallback
         this.sockets.put(symbol, socketId);
+    }
+
+    /**
+     * Manages the WebSocket connection for user events
+     * listenKey is updated each 60 minutes
+     * all events are save in a {@code BufferEvent<UserDataEventBinance>}
+     */
+    private void manageWebSocketForUserEvent() {
+        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+        Runnable task = () -> {
+            try {
+                if (this.socketUserStreamId != null) {
+                    this.wsClient.closeConnection(this.socketUserStreamId);
+                }
+                String key = this.generateListenKey();
+                this.socketUserStreamId = this.wsClient.listenUserStream(
+                        key,
+                        null,
+                        (event) -> {
+                            try {
+                                this.userEvents.add(BinanceEventFactory.createEvent(event));
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }, null, null, null);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        };
+        long initialDelay = 0;
+        long period = 60;
+        scheduler.scheduleAtFixedRate(task, initialDelay, period, TimeUnit.MINUTES);
     }
 
     /**
