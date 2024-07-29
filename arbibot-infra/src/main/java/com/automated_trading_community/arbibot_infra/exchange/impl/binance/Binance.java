@@ -16,7 +16,7 @@ import com.arbibot.entities.Exchange;
 import com.arbibot.entities.Order;
 import com.arbibot.entities.Pair;
 import com.arbibot.ports.output.ForExchangeCommunication;
-import com.automated_trading_community.arbibot_infra.exchange.impl.binance.Exceptions.BinanceDeserializerException;
+import com.automated_trading_community.arbibot_infra.exchange.impl.binance.exceptions.BinanceDeserializerException;
 import com.automated_trading_community.arbibot_infra.exchange.impl.binance.models.AssetBinance;
 import com.automated_trading_community.arbibot_infra.exchange.impl.binance.models.MiniTicker;
 import com.binance.connector.client.WebSocketStreamClient;

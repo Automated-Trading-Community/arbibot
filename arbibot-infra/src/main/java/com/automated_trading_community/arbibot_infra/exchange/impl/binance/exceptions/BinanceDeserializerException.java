@@ -1,4 +1,4 @@
-package com.automated_trading_community.arbibot_infra.exchange.impl.binance.Exceptions;
+package com.automated_trading_community.arbibot_infra.exchange.impl.binance.exceptions;
 
 public class BinanceDeserializerException extends Exception {
     /**
