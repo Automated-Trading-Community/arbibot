@@ -36,7 +36,7 @@ public class OrderTest {
         Order order = new Order(pair, OrderType.SELL, quantity, percentFees);
 
         assertTrue(order.getQuantity().compareTo(BigDecimal.valueOf(1.0)) == 0);
-        assertTrue(order.getFees().compareTo(BigDecimal.valueOf(40.0)) == 0);
+        assertTrue(order.getFees().compareTo(BigDecimal.valueOf(40.0)) == 0); 
         assertTrue(order.getExecutedQuantity().compareTo(BigDecimal.valueOf(39960)) == 0);
     }
 }

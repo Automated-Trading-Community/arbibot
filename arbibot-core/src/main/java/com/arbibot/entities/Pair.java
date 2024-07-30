@@ -36,6 +36,7 @@ import com.arbibot.exceptions.PairSameAssetException;
  * </pre>
  * 
  * @author SChoumiloff
+ * @author SebastienGuillemin
  * @since 1.0
  * 
  */
@@ -49,9 +50,6 @@ public class Pair {
     private BigDecimal price;
 
     /**
-     * Constructs a {@code Pair} with the specified base asset and quote asset.
-     * The {@code id} is auto-generated to ensure uniqueness.
-     *
      * @param baseAsset  the primary asset in the trading pair
      * @param quoteAsset the asset in which the value of the base asset is quoted
      */
@@ -71,9 +69,9 @@ public class Pair {
 
     /**
      * 
-     * @param baseAsset
-     * @param quoteAsset
-     * @param price
+     * @param baseAsset  the primary asset in the trading pair
+     * @param quoteAsset the asset in which the value of the base asset is quoted
+     * @param price      current price of the pair.
      */
     public Pair(Asset baseAsset, Asset quoteAsset, BigDecimal price) {
         this(baseAsset, quoteAsset);

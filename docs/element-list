@@ -1,0 +1,9 @@
+com.arbibot.entities
+com.arbibot.exceptions
+com.arbibot.ports
+com.arbibot.ports.input
+com.arbibot.ports.output
+com.arbibot.usecases
+com.arbibot.usecases.arbitrage
+com.automated_trading_community.arbibot_infra
+com.automated_trading_community.arbibot_infra.exchange.impl

@@ -1,7 +1,6 @@
 package com.arbibot;
 
 import static org.junit.Assert.assertTrue;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.math.BigDecimal;
@@ -18,9 +17,9 @@ import com.arbibot.entities.ExchangeType;
 import com.arbibot.entities.Order;
 import com.arbibot.entities.OrderType;
 import com.arbibot.entities.Pair;
+import com.arbibot.exceptions.TriangularArbitragingException;
 import com.arbibot.ports.output.ForExchangeCommunication;
 import com.arbibot.usecases.arbitrage.TriangularArbitrage;
-import com.arbibot.usecases.arbitrage.exceptions.TriangularArbitragingException;
 
 public class TriangularArbitrageTest {
     /**
@@ -31,12 +30,14 @@ public class TriangularArbitrageTest {
         private Map<Pair, Order> passedOrders = new HashMap<>();
 
         @Override
-        public void getPriceForPair(Pair pair, Exchange exchange) {
+        public BigDecimal getPriceForPair(Pair pair, Exchange exchange) {
             if (prices.containsKey(pair)) {
                 pair.setPrice(prices.get(pair));
             } else {
                 pair.setPrice(null);
             }
+
+            return pair.getPrice();
         }
 
         @Override
@@ -178,5 +179,8 @@ public class TriangularArbitrageTest {
         assertTrue(this.forExchangeCommunicationStub.getPassedOrders().get(pair1).getType().equals(OrderType.BUY));
         assertTrue(this.forExchangeCommunicationStub.getPassedOrders().get(pair2).getType().equals(OrderType.SELL));
         assertTrue(this.forExchangeCommunicationStub.getPassedOrders().get(pair3).getType().equals(OrderType.SELL));
+
+        // TODO tester si les ordres ont été rempli mais je ne vois pas trop comment
+        // tester cette fonctionnalité...
     }
 }

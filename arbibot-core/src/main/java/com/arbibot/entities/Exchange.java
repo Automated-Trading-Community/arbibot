@@ -26,6 +26,7 @@ import lombok.Setter;
  * </pre>
  * 
  * @author SChoumiloff
+ * @author SebastienGuillemin
  * @since 1.0
  * 
  */
@@ -33,23 +34,17 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Exchange {
-
     private String name;
     private String url;
     private BigDecimal fees;
     private ExchangeType exchangeType;
 
     /**
-     * Constructs an Exchange instance with the specified parameters.
      *
      * @param name         the name of the exchange
      * @param url          the URL of the exchange
-     * @param tradingPairs the list of trading pairs available on the exchange
      * @param fees         the trading fees charged by the exchange
-     * @param feesAsset    the asset in which the fees are charged (TODO : supprimer
-     *                     ?)
-     * @param exchangeType the type of the exchange (e.g., CEX,
-     *                     DEX)
+     * @param exchangeType the type of the exchange (e.g., CEX, DEX)
      */
     public Exchange(String name, String url, BigDecimal fees, ExchangeType exchangeType) {
         this.name = name;

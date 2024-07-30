@@ -18,9 +18,8 @@ import lombok.Setter;
  * @see com.arbibot.entities.OrderType
  * @see com.arbibot.entities.OrderStatus
  * 
- * @author SGuillemin
  * @author SChoumiloff
- * 
+ * @author SebastienGuillemin
  * @since 1.0
  */
 
@@ -45,14 +44,14 @@ public class Order {
 
     /**
      * 
-     * constructor
+     * Constructor
      * 
-     * @param pair
-     * @param type
-     * @param quantity
-     * @param reference
-     * @param currentPairPrice
-     * @param percentFees
+     * @param pair        the pair on which the order is taken.
+     * @param type        Buy or Sell.
+     * @param quantity    The quantity to buy or to sell. If {@code type} is
+     *                    BUY then the quantity is expressed in quote asset,
+     *                    otherwise it is expressed in base asset.
+     * @param percentFees percentage of the the wuantoty taken as fees.
      */
     public Order(Pair pair, OrderType type, BigDecimal quantity, BigDecimal percentFees) {
         this.pair = pair;

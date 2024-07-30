@@ -1,10 +1,17 @@
-package com.arbibot.usecases.arbitrage.exceptions;
+package com.arbibot.exceptions;
 
+/**
+ * Error thrown if an error occurs when performing triangular arbitrage.
+ * 
+ * @see com.arbibot.usecases.arbitrage.TriangularArbitrage
+ * 
+ * @author SChoumiloff
+ * @author SebastienGuillemin
+ * @since 1.0
+ * 
+ */
 public class TriangularArbitragingException extends Exception {
     /**
-     * Constructs a new {@code TriangularArbitragingException} with the specified
-     * detail
-     * message.
      *
      * @param errorMessage the detail message describing the validation error
      */

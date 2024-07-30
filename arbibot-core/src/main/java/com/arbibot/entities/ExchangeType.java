@@ -1,12 +1,20 @@
 package com.arbibot.entities;
 
 /**
- * Enum representing the type of cryptocurrency exchange.
+ * Enumerates the different types of exchange.
+ * 
+ * @author SChoumiloff
+ * @author SebastienGuillemin
+ * @since 1.0
  */
 public enum ExchangeType {
-    /** Centralized Exchange */
+    /** 
+     * Centralized Exchange
+     */
     CEX,
 
-    /** Decentralized Exchange */
+    /**
+     *  Decentralized Exchange 
+     */
     DEX
 }
