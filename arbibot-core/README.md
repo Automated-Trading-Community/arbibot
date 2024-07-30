@@ -1,3 +1,1 @@
-# ArbiBot
-
-Description in coming.
+# Arbibot core library

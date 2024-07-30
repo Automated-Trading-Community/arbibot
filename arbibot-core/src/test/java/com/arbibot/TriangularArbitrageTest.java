@@ -17,9 +17,9 @@ import com.arbibot.entities.ExchangeType;
 import com.arbibot.entities.Order;
 import com.arbibot.entities.OrderType;
 import com.arbibot.entities.Pair;
+import com.arbibot.exceptions.TriangularArbitragingException;
 import com.arbibot.ports.output.ForExchangeCommunication;
 import com.arbibot.usecases.arbitrage.TriangularArbitrage;
-import com.arbibot.usecases.arbitrage.exceptions.TriangularArbitragingException;
 
 public class TriangularArbitrageTest {
     /**
