@@ -5,6 +5,16 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Getter;
 
+/**
+ * 
+ * Class use to represent a Binance execution report. It's use in binance socket
+ * (userDataStream)
+ * 
+ * @see com.binance.connector.client.WebSocketStreamClient#listenUserStream
+ * 
+ * @author SChoumiloff SGuillemin
+ * @since 1.0
+ */
 @Getter
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ExecutionReport extends UserDataEventBinance {

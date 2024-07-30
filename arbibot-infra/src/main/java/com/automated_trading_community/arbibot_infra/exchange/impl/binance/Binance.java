@@ -25,6 +25,7 @@ import com.automated_trading_community.arbibot_infra.exchange.impl.binance.facto
 import com.automated_trading_community.arbibot_infra.exchange.impl.binance.models.AssetBinance;
 import com.automated_trading_community.arbibot_infra.exchange.impl.binance.models.MiniTicker;
 import com.automated_trading_community.arbibot_infra.exchange.impl.binance.models.UserDataEventBinance;
+import com.binance.connector.client.SpotClient;
 import com.binance.connector.client.WebSocketStreamClient;
 import com.binance.connector.client.enums.DefaultUrls;
 import com.binance.connector.client.impl.SpotClientImpl;
@@ -36,7 +37,7 @@ public class Binance implements ForExchangeCommunication {
 
     private Map<String, BigDecimal> prices = new HashMap<>();
     private Map<String, Integer> sockets = new HashMap<>();
-    private SpotClientImpl clientSpot;
+    private SpotClient clientSpot;
     private WebSocketStreamClient wsClient;
     private Integer socketUserStreamId = null;
 

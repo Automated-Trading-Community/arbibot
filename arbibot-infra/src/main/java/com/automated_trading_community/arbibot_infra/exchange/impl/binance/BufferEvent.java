@@ -22,6 +22,7 @@ public class BufferEvent<T> {
      *
      * @param capacity the maximum number of elements the buffer can hold
      */
+    @SuppressWarnings("unchecked")
     public BufferEvent(int capacity) {
         this.capacity = capacity;
         this.buffer = (T[]) new Object[capacity];

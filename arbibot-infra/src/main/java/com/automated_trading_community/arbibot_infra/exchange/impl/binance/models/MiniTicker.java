@@ -8,6 +8,16 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.ToString;
 
+/**
+ * 
+ * Class use to represent a Binance mini ticker. It's use in binance socket
+ * message.
+ * 
+ * @see com.binance.connector.client.WebSocketStreamClient#miniTickerStream
+ * 
+ * @author SChoumiloff SGuillemin
+ * @since 1.0
+ */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Getter
 @ToString

@@ -6,6 +6,14 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.ToString;
 
+/**
+ * This class represents a Binance asset. It's use in binance rest response.
+ * 
+ * @see com.binance.connector.client.SpotClient
+ * 
+ * @author SChoumiloff SGuillemin
+ * @since 1.0
+ */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Getter
 @ToString
