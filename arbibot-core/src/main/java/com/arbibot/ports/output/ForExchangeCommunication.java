@@ -45,7 +45,7 @@ public interface ForExchangeCommunication {
      * 
      * @return {@link BigDecimal} The balance of the asset.
      */
-    BigDecimal getBalanceForAsset(Asset asset, Exchange exchange);
+    BigDecimal getBalanceForAsset(Asset asset, Exchange exchange) throws Exception;
 
     /**
      * Retrieve information about the order whose ID is {@code orderId} on a
