@@ -66,7 +66,7 @@ public class Binance implements ForExchangeCommunication {
      *                                      response from Binance
      */
     @Override
-    public void getPriceForPair(Pair pair, Exchange exchange) {
+    public BigDecimal getPriceForPair(Pair pair, Exchange exchange) {
         try {
             String symbol = pair.getBaseAsset() + "" + pair.getQuoteAsset();
             if (this.prices.containsKey(symbol)) {
@@ -78,8 +78,10 @@ public class Binance implements ForExchangeCommunication {
                 }
                 pair.setPrice(this.prices.get(symbol));
             }
+            return this.prices.get(symbol);
         } catch (Exception e) {
             e.printStackTrace();
+            return null;
         }
     }
 
