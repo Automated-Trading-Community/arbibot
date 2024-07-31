@@ -1,4 +1,4 @@
-package com.arbibot.infra.adapter.fortriangulararbitraging.web;
+package com.arbibot.infra.adapter.fortriangulararbitraging.web.controller;
 
 import java.math.BigDecimal;
 
@@ -40,10 +40,4 @@ public class TriangularArbitrageController {
 
         return "ok";
     }
-
-    @GetMapping("/ping")
-    public String getMethodName() {
-        return "Pong";
-    }
-    
 }
