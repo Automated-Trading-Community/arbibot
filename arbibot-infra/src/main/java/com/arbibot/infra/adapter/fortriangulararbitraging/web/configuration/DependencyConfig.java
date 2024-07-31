@@ -9,7 +9,7 @@ import com.arbibot.core.ports.output.ForExchangeCommunication;
 import com.arbibot.core.usecases.arbitrage.TriangularArbitrage;
 
 @Configuration
-@ComponentScan(basePackages = {"com.arbibot"})
+@ComponentScan(basePackages = { "com.arbibot" })
 public class DependencyConfig {
     @Autowired
     private ForExchangeCommunication forExchangeCommunication;
@@ -18,5 +18,4 @@ public class DependencyConfig {
     public TriangularArbitrage triangularArbitrage() {
         return new TriangularArbitrage(forExchangeCommunication);
     }
-    
 }

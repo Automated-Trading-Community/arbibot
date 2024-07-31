@@ -22,17 +22,25 @@ import com.arbibot.core.entities.Order;
 import com.arbibot.core.entities.Pair;
 import com.arbibot.core.ports.output.ForExchangeCommunication;
 import com.arbibot.infra.adapter.forexchangecommunication.binance.exceptions.BinanceDeserializerException;
+import com.arbibot.infra.adapter.forexchangecommunication.binance.exceptions.BinancePermissionApiKeysException;
+import com.arbibot.infra.adapter.forexchangecommunication.binance.exceptions.BinanceWrongApiKeys;
 import com.arbibot.infra.adapter.forexchangecommunication.binance.factories.BinanceEventFactory;
+import com.arbibot.infra.adapter.forexchangecommunication.binance.models.ApiPermissionsBinance;
 import com.arbibot.infra.adapter.forexchangecommunication.binance.models.AssetBinance;
 import com.arbibot.infra.adapter.forexchangecommunication.binance.models.MiniTicker;
 import com.arbibot.infra.adapter.forexchangecommunication.binance.models.UserDataEventBinance;
+
 import com.binance.connector.client.SpotClient;
 import com.binance.connector.client.WebSocketStreamClient;
 import com.binance.connector.client.enums.DefaultUrls;
+import com.binance.connector.client.exceptions.BinanceClientException;
 import com.binance.connector.client.impl.SpotClientImpl;
 import com.binance.connector.client.impl.WebSocketStreamClientImpl;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import jakarta.annotation.PostConstruct;
 
 @Service
 public class Binance implements ForExchangeCommunication {
@@ -42,8 +50,12 @@ public class Binance implements ForExchangeCommunication {
     private SpotClient clientSpot;
     private WebSocketStreamClient wsClient;
     private Integer socketUserStreamId = null;
+    private BufferEvent<UserDataEventBinance> userEvents;
 
-    private BufferEvent<UserDataEventBinance> userEvents; // TODO define type for userEventList
+    @Value("${binance.api.key:#{null}}")
+    private String apiKEY;
+    @Value("${binance.api.secret:#{null}}")
+    private String apiSECRET;
 
     /**
      * Initializes the Binance exchange with the given API key and secret.
@@ -51,10 +63,32 @@ public class Binance implements ForExchangeCommunication {
      * 
      * @param apiKey
      * @param apiSecret
+     * @throws BinanceDeserializerException
+     * @throws BinanceWrongApiKeys
      */
-    public Binance(@Value("${binance.api.key}") String apiKey,
-            @Value("${binance.api.secret}") String apiSecret) {
-        this.clientSpot = new SpotClientImpl(apiKey, apiSecret);
+    public Binance() {
+    }
+
+    @PostConstruct
+    public void init() {
+        if (this.apiKEY == null || this.apiSECRET == null) {
+            // TODO manage error
+            return;
+        }
+        this.clientSpot = new SpotClientImpl(this.apiKEY, this.apiSECRET);
+        try {
+            this.verifyPermissions();
+            // TODO manage errors
+        } catch (BinanceWrongApiKeys e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (BinanceDeserializerException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (BinancePermissionApiKeysException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
         this.wsClient = new WebSocketStreamClientImpl(DefaultUrls.WS_URL);
         this.manageWebSocketForUserEvent();
     }
@@ -236,5 +270,51 @@ public class Binance implements ForExchangeCommunication {
     private String generateListenKey() {
         JSONObject obj = new JSONObject(clientSpot.createUserData().createListenKey());
         return obj.getString("listenKey");
+    }
+
+    /**
+     * Verifies the permissions of the Binance API keys by making a request to the
+     * Binance API and checking the response.
+     * If the response indicates that the API keys are wrong or missing, a
+     * `BinanceWrongApiKeys` exception is thrown.
+     * If there is an error during the deserialization of the response, a
+     * `BinanceDeserializerException` is thrown.
+     *
+     * @throws BinanceWrongApiKeys          if the API keys are wrong or missing
+     * @throws BinanceDeserializerException if there is an error during
+     *                                      deserialization
+     */
+    private void verifyPermissions()
+            throws BinanceWrongApiKeys, BinanceDeserializerException, BinancePermissionApiKeysException {
+        try {
+            String permissions = this.clientSpot.createWallet().apiPermission(null);
+            ObjectMapper objectMapper = new ObjectMapper();
+            try {
+                ApiPermissionsBinance apiPermissions = objectMapper.readValue(permissions, ApiPermissionsBinance.class);
+                if (!isPermissionsOk(apiPermissions)) {
+                    throw new BinancePermissionApiKeysException("Wrong permissions");
+                }
+            } catch (JsonProcessingException jpe) {
+                throw new BinanceDeserializerException("error during deserialization on " + permissions);
+            }
+            // } catch (BinanceWrongApiKeys bwak) {
+            // throw bwak;
+            // }
+        } catch (BinanceClientException e) {
+            if (e.getErrorCode() == -1022) {
+                throw new BinanceWrongApiKeys("Wrong or missing Binance API keys.");
+            }
+        }
+    }
+
+    /**
+     * Checks if the given API permissions are valid.
+     *
+     * @param permissions the API permissions to check
+     * @return true if the permissions allow reading and spot and margin trading,
+     *         false otherwise
+     */
+    private boolean isPermissionsOk(ApiPermissionsBinance permissions) {
+        return permissions.isEnableReading() && permissions.isEnableSpotAndMarginTrading();
     }
 }
