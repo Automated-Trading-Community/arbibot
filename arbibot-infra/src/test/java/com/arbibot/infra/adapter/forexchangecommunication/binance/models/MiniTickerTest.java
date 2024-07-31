@@ -6,8 +6,8 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.util.StreamUtils;
 
@@ -16,8 +16,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @SpringBootTest
 public class MiniTickerTest {
     @Test
-    public void testMiniTicker(@Value("__files/payload/binance/miniTickerBinance.json") Resource miniTickerResource)
-            throws IOException {
+    public void testMiniTicker() throws IOException {
+        Resource miniTickerResource = new ClassPathResource("__files/payload/binance/miniTickerBinance.json");
 
         String json = StreamUtils.copyToString(miniTickerResource.getInputStream(), StandardCharsets.UTF_8);
 

@@ -9,8 +9,8 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.util.StreamUtils;
 
@@ -22,8 +22,8 @@ import com.arbibot.infra.adapter.forexchangecommunication.binance.models.UserDat
 class BinanceEventFactoryTest {
 
     @Test
-    void testCreateExecutionReportEvent(@Value("__files/payload/binance/executionOrder1Buy.json") Resource exResource)
-            throws IOException {
+    void testCreateExecutionReportEvent() throws IOException {
+        Resource exResource = new ClassPathResource("__files/payload/binance/executionOrder1Buy.json");
         String json = StreamUtils.copyToString(exResource.getInputStream(), StandardCharsets.UTF_8);
         UserDataEventBinance event = BinanceEventFactory.createEvent(json);
 
@@ -35,8 +35,9 @@ class BinanceEventFactoryTest {
     }
 
     @Test
-    void testCreatePositionBinanceEvent(@Value("__files/payload/binance/position.json") Resource posResource)
-            throws IOException {
+    void testCreatePositionBinanceEvent() throws IOException {
+        Resource posResource = new ClassPathResource("__files/payload/binance/position.json");
+
         String json = StreamUtils.copyToString(posResource.getInputStream(), StandardCharsets.UTF_8);
         UserDataEventBinance event = BinanceEventFactory.createEvent(json);
         System.out.println(event.getClass());
@@ -47,7 +48,8 @@ class BinanceEventFactoryTest {
     }
 
     @Test
-    void notKnownEvent(@Value("__files/payload/binance/notKnownEvent.json") Resource notKnow) throws IOException {
+    void notKnownEvent() throws IOException {
+        Resource notKnow = new ClassPathResource("__files/payload/binance/notKnownEvent.json");
         String json = StreamUtils.copyToString(notKnow.getInputStream(), StandardCharsets.UTF_8);
         Exception exception = assertThrows(IllegalArgumentException.class, () -> BinanceEventFactory.createEvent(json));
         assertEquals(exception.getMessage(), "Unknown type: notKnownEvent");

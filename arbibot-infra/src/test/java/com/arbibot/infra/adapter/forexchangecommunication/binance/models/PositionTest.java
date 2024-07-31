@@ -7,8 +7,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.util.StreamUtils;
 
@@ -17,9 +17,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @SpringBootTest
 public class PositionTest {
     @Test
-    public void testPositionBinance(@Value("__files/payload/binance/position.json") Resource positionBinanceResource)
-            throws IOException {
-
+    public void testPositionBinance() throws IOException {
+        Resource positionBinanceResource = new ClassPathResource("__files/payload/binance/position.json");
         String json = StreamUtils.copyToString(positionBinanceResource.getInputStream(), StandardCharsets.UTF_8);
         PositionBinance positionBinance = new ObjectMapper().readValue(json, PositionBinance.class);
 

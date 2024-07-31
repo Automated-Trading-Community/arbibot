@@ -6,8 +6,8 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
 import org.junit.Test;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.util.StreamUtils;
 
@@ -16,8 +16,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @SpringBootTest
 public class ExecutionReportTest {
     @Test
-    void testExecutionReportModel(@Value("__files/payload/binance/executionOrder1Buy.json") Resource executionReport)
-            throws IOException {
+    void testExecutionReportModel() throws IOException {        
+        Resource executionReport = new ClassPathResource("__files/payload/binance/executionOrder1Buy.json");
         String json = StreamUtils.copyToString(executionReport.getInputStream(), StandardCharsets.UTF_8);
         ExecutionReport executionReportModel = new ObjectMapper().readValue(json, ExecutionReport.class);
         assertEquals("executionReport", executionReportModel.getEventType());
