@@ -1,4 +1,4 @@
-package com.arbibot.core.exceptions;
+package com.arbibot.core.exceptions.entities.pair;
 
 /**
  * Exception thrown when an {@link com.arbibot.core.entities.Asset} is missing when
@@ -14,7 +14,7 @@ package com.arbibot.core.exceptions;
 public class PairNullAssetException extends RuntimeException {
 
     /**
-     * Constructs a new {@code PairException} with the specified detail
+     * Constructs a new {@code PairSameAssetException} with the specified detail
      * message.
      *
      * @param errorMessage the detail message describing the validation error

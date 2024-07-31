@@ -32,19 +32,23 @@ public class Order {
     private OrderType type;
 
     @Setter
+    /**
+     * Default value = NOT_PASSED when the order is created.
+     */
     private OrderStatus status;
 
     @Setter
     private BigDecimal fees;
 
+    private BigDecimal percentFees;
+    private BigDecimal quantity;
+    
     @Setter
     private BigDecimal executedQuantity;
-    private BigDecimal quantity;
-    private BigDecimal percentFees;
 
     /**
      * 
-     * Constructor
+     * By default the order's status is {@link com.arbibot.core.entities.OrderStatus#NOT_PASSED}
      * 
      * @param pair        the pair on which the order is taken.
      * @param type        Buy or Sell.
@@ -56,11 +60,27 @@ public class Order {
     public Order(Pair pair, OrderType type, BigDecimal quantity, BigDecimal percentFees) {
         this.pair = pair;
         this.type = type;
+        this.status = OrderStatus.NOT_PASSED;
         this.percentFees = percentFees;
         this.quantity = quantity;
 
         this.computeFees();
         this.computeExecuted();
+    }
+
+    /**
+     * 
+     * @param pair        the pair on which the order is taken.
+     * @param type        Buy or Sell.
+     * @param quantity    The quantity to buy or to sell. If {@code type} is
+     *                    BUY then the quantity is expressed in quote asset,
+     *                    otherwise it is expressed in base asset.
+     * @param percentFees percentage of the the wuantoty taken as fees.
+     * @param status      the order status.
+     */
+    public Order(Pair pair, OrderType type, BigDecimal quantity, BigDecimal percentFees, OrderStatus status) {
+        this(pair, type, quantity, percentFees);
+        this.status = status;
     }
 
     /**

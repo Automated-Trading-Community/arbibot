@@ -6,8 +6,8 @@ import lombok.Setter;
 import java.math.BigDecimal;
 import java.util.UUID;
 
-import com.arbibot.core.exceptions.PairNullAssetException;
-import com.arbibot.core.exceptions.PairSameAssetException;
+import com.arbibot.core.exceptions.entities.pair.PairNullAssetException;
+import com.arbibot.core.exceptions.entities.pair.PairSameAssetException;
 
 /**
  * The {@code Pair} class represents a trading pair consisting of two financial

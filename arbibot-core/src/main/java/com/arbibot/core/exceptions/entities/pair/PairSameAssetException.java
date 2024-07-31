@@ -1,4 +1,4 @@
-package com.arbibot.core.exceptions;
+package com.arbibot.core.exceptions.entities.pair;
 
 import com.arbibot.core.entities.Asset;
 
@@ -17,7 +17,7 @@ import com.arbibot.core.entities.Asset;
 public class PairSameAssetException extends RuntimeException {
 
     /**
-     * Constructs a new {@code PairException} with the specified detail
+     * Constructs a new {@code PairSameAssetException} with the specified detail
      * message.
      *
      * @param asset1 first asset of the pair for which the error occurs.

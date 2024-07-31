@@ -3,6 +3,7 @@ package com.arbibot.core.ports.input;
 import java.math.BigDecimal;
 
 import com.arbibot.core.entities.Exchange;
+import com.arbibot.core.entities.Order;
 import com.arbibot.core.entities.Pair;
 import com.arbibot.core.exceptions.TriangularArbitragingException;
 
@@ -24,11 +25,13 @@ public interface ForTriangularArbitraging {
      * @param pair3    Final pair the is used to convert the middle asset back
      *                 to the first asset (eg. (C/A)).
      * @param exchange The exchange where orders are executed.
-     * @param quantity Th equantity to buy with the first order of the arbitrage.
+     * @param quantity The quantity to buy with the first order of the arbitrage.
+     * 
+     * @return         The list of orders passed to perform the arbitrage.
      * 
      * @throws TriangularArbitragingException is an error occurs during the
      *                                        arbitrage.
      */
-    void performTriangualarArbitrage(Pair pair1, Pair pair2, Pair pair3, Exchange exchange, BigDecimal quantity)
+    Order[] performTriangualarArbitrage(Pair pair1, Pair pair2, Pair pair3, Exchange exchange, BigDecimal quantity)
             throws TriangularArbitragingException;
 }

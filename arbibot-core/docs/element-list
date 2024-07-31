@@ -1,7 +1,7 @@
-com.arbibot.entities
-com.arbibot.exceptions
-com.arbibot.ports
-com.arbibot.ports.input
-com.arbibot.ports.output
-com.arbibot.usecases
-com.arbibot.usecases.arbitrage
+com.arbibot.core.entities
+com.arbibot.core.exceptions
+com.arbibot.core.ports
+com.arbibot.core.ports.input
+com.arbibot.core.ports.output
+com.arbibot.core.usecases
+com.arbibot.core.usecases.arbitrage
