@@ -14,6 +14,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 
 import com.arbibot.core.entities.Asset;
 import com.arbibot.core.entities.Exchange;
@@ -33,6 +34,7 @@ import com.binance.connector.client.impl.WebSocketStreamClientImpl;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+@Service
 public class Binance implements ForExchangeCommunication {
 
     private Map<String, BigDecimal> prices = new HashMap<>();
