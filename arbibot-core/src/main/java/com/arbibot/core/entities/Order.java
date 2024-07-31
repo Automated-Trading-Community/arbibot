@@ -5,6 +5,7 @@ import java.math.RoundingMode;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 /**
  * The Order class represents a trading order for a specific pair of assets on
@@ -24,6 +25,7 @@ import lombok.Setter;
  */
 
 @Getter
+@ToString
 public class Order {
     // TODO : Use the step-size to determine ROUNDING_SCALE ?
     private static final int ROUNDING_SCALE = 8;
