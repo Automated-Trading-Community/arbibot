@@ -18,6 +18,7 @@ import com.arbibot.core.entities.Order;
 import com.arbibot.core.entities.OrderType;
 import com.arbibot.core.entities.Pair;
 import com.arbibot.core.exceptions.TriangularArbitragingException;
+import com.arbibot.core.exceptions.entities.ports.output.ExchangePairPriceException;
 import com.arbibot.core.ports.output.ForExchangeCommunication;
 
 public class TriangularArbitrageTest {
@@ -29,7 +30,7 @@ public class TriangularArbitrageTest {
         private Map<Pair, Order> passedOrders = new HashMap<>();
 
         @Override
-        public BigDecimal getPriceForPair(Pair pair, Exchange exchange) {
+        public BigDecimal getPriceForPair(Pair pair, Exchange exchange) throws ExchangePairPriceException {
             if (prices.containsKey(pair)) {
                 pair.setPrice(prices.get(pair));
             } else {
@@ -122,34 +123,34 @@ public class TriangularArbitrageTest {
 
     @Test
     public void testPricesNullAssert() {
-        AssertionError error = assertThrows(AssertionError.class,
+        TriangularArbitragingException error = assertThrows(TriangularArbitragingException.class,
                 () -> this.triangularArbitrage.performTriangualarArbitrage(pair1, pair2,
                         pair3,
                         this.exchange, BigDecimal.valueOf(20)));
-        assertTrue(error.getMessage().equals(pair1.toString() + " price is null"));
+        assertTrue(error.getMessage().equals("Price of pair " + pair1 + " is null."));
     }
 
     @Test
     public void testPricesPair2NullAssert() {
-        this.forExchangeCommunicationStub.setPrice(pair1,
-                BigDecimal.valueOf(2503.4));
-        AssertionError error = assertThrows(AssertionError.class,
+        this.forExchangeCommunicationStub.setPrice(pair1, BigDecimal.valueOf(2503.4));
+
+        TriangularArbitragingException error = assertThrows(TriangularArbitragingException.class,
                 () -> this.triangularArbitrage.performTriangualarArbitrage(pair1, pair2,
                         pair3,
                         this.exchange, BigDecimal.valueOf(20)));
-        assertTrue(error.getMessage().equals(pair2.toString() + " price is null"));
+        assertTrue(error.getMessage().equals("Price of pair " + pair2 + " is null."));
     }
 
     @Test
     public void testPricesPair3NullAssert() {
-        this.forExchangeCommunicationStub.setPrice(pair1,
-                BigDecimal.valueOf(2503.4));
+        this.forExchangeCommunicationStub.setPrice(pair1, BigDecimal.valueOf(2503.4));
         this.forExchangeCommunicationStub.setPrice(pair2, BigDecimal.valueOf(0.05));
-        AssertionError error = assertThrows(AssertionError.class,
+
+        TriangularArbitragingException error = assertThrows(TriangularArbitragingException.class,
                 () -> this.triangularArbitrage.performTriangualarArbitrage(pair1, pair2,
                         pair3,
                         this.exchange, BigDecimal.valueOf(20)));
-        assertTrue(error.getMessage().equals(pair3.toString() + " price is null"));
+        assertTrue(error.getMessage().equals("Price of pair " + pair3 + " is null."));
     }
 
     @Test
@@ -179,7 +180,7 @@ public class TriangularArbitrageTest {
         assertTrue(this.forExchangeCommunicationStub.getPassedOrders().get(pair2).getType().equals(OrderType.SELL));
         assertTrue(this.forExchangeCommunicationStub.getPassedOrders().get(pair3).getType().equals(OrderType.SELL));
 
-        // TODO tester si les ordres ont été rempli mais je ne vois pas trop comment
+        // TODO tester si les ordres ont été remplis mais je ne vois pas trop comment
         // tester cette fonctionnalité...
     }
 }

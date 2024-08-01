@@ -10,7 +10,7 @@ package com.arbibot.core.entities;
  */
 public enum OrderStatus {
     /**
-     * The order has been rejected by the exchangeµ.
+     * The order has been rejected by the exchange.
      */
     REJECTED,
 
@@ -22,5 +22,10 @@ public enum OrderStatus {
     /**
      * The order has not been executed or rejected yet.
      */
-    PENDING
+    PENDING,
+
+    /**
+     * The order has been created locally but has not yet been sent to the exchange.
+     */
+    NOT_PASSED
 }

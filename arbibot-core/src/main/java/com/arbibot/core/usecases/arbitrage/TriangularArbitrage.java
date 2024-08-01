@@ -7,6 +7,7 @@ import com.arbibot.core.entities.Order;
 import com.arbibot.core.entities.OrderType;
 import com.arbibot.core.entities.Pair;
 import com.arbibot.core.exceptions.TriangularArbitragingException;
+import com.arbibot.core.exceptions.entities.ports.output.ExchangePairPriceException;
 import com.arbibot.core.ports.input.ForTriangularArbitraging;
 import com.arbibot.core.ports.output.ForExchangeCommunication;
 
@@ -34,7 +35,7 @@ public class TriangularArbitrage implements ForTriangularArbitraging {
 
     /**
      * 
-     * @param forExchangeDataRecovery dependancy required to retrieve information
+     * @param forExchangeDataRecovery Dependancy required to retrieve information
      *                                from exchnages.
      */
     public TriangularArbitrage(ForExchangeCommunication forExchangeDataRecovery) {
@@ -42,29 +43,51 @@ public class TriangularArbitrage implements ForTriangularArbitraging {
     }
 
     @Override
-    public void performTriangualarArbitrage(Pair pair1, Pair pair2, Pair pair3, Exchange exchange, BigDecimal quantity)
+    /**
+     * @inheritDoc
+     */
+    public Order[] performTriangualarArbitrage(Pair pair1, Pair pair2, Pair pair3, Exchange exchange, BigDecimal quantity)
             throws TriangularArbitragingException {
 
         if (this.validateTriangle(pair1, pair2, pair3)) {
-            this.forExchangeCommunication.getPriceForPair(pair1, exchange);
-            this.forExchangeCommunication.getPriceForPair(pair2, exchange);
-            this.forExchangeCommunication.getPriceForPair(pair3, exchange);
+            try {
+                // Retrieve pairs price.
+                this.forExchangeCommunication.getPriceForPair(pair1, exchange);
+                this.forExchangeCommunication.getPriceForPair(pair2, exchange);
+                this.forExchangeCommunication.getPriceForPair(pair3, exchange);
+            } catch (ExchangePairPriceException e) {
+                e.printStackTrace();
+                return null;
+            }
 
-            assert pair1.getPrice() != null : pair1.toString() + " price is null";
-            assert pair2.getPrice() != null : pair2.toString() + " price is null";
-            assert pair3.getPrice() != null : pair3.toString() + " price is null";
+            // Check is the price are not null
+            if (pair1.getPrice() == null) throw new TriangularArbitragingException("Price of pair " + pair1 + " is null.");
+            if (pair2.getPrice() == null) throw new TriangularArbitragingException("Price of pair " + pair2 + " is null.");
+            if (pair3.getPrice() == null) throw new TriangularArbitragingException("Price of pair " + pair3 + " is null.");
 
+            // Comptute implied rate
             BigDecimal impliedRate = this.computeImpliedRate(pair2.getPrice(), pair3.getPrice());
+
+            // If implied rate is greater than pair 1 price then continue.
             if (impliedRate.compareTo(pair1.getPrice()) > 0) {
+                // Create orders
                 Order[] orders = this.createOrders(pair1, pair2, pair3, exchange, quantity);
+
+                // Compute fees
                 BigDecimal fees = this.computeFeesForBuyCurrency(orders);
+
+                // If (implied rate - fees) > pair 1 price then continue
                 if (impliedRate.subtract(fees).compareTo(pair1.getPrice()) > 0) {
                     this.passOrders(orders);
+                    
                     // BigDecimal variation = this.computeVaritation(pair1.getPrice(), impliedRate);
-                    // Ajouter une condition supplémentaire en mode si variation sup a 0.5 % alors
+                    // TODO : Ajouter une condition supplémentaire en mode si variation sup a 0.5 % alors
                     // go
                 }
+
+                return orders;
             }
+            return null;
         } else
             throw new TriangularArbitragingException("Triangle or asset buy is not valid");
     }

@@ -1,0 +1,14 @@
+com.arbibot.core.ports
+com.arbibot.core.ports.output
+com.arbibot.core.ports.input
+com.arbibot.core.exceptions
+com.arbibot.core.usecases
+com.arbibot.core.usecases.arbitrage
+com.arbibot.core.entities
+com.arbibot.infra
+com.arbibot.infra.adapter.forexchangecommunication.binance
+com.arbibot.infra.adapter.forexchangecommunication.binance.exceptions
+com.arbibot.infra.adapter.forexchangecommunication.binance.factories
+com.arbibot.infra.adapter.forexchangecommunication.binance.models
+com.arbibot.infra.adapter.fortriangulararbitraging.web.configuration
+com.arbibot.infra.adapter.fortriangulararbitraging.web.controller

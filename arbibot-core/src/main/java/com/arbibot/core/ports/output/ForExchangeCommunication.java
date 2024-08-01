@@ -7,6 +7,7 @@ import com.arbibot.core.entities.Asset;
 import com.arbibot.core.entities.Exchange;
 import com.arbibot.core.entities.Order;
 import com.arbibot.core.entities.Pair;
+import com.arbibot.core.exceptions.entities.ports.output.ExchangePairPriceException;
 
 /**
  * Output port used to retrieve information from an exchange.
@@ -24,8 +25,11 @@ public interface ForExchangeCommunication {
      * @param exchange the exchange on which the price is retrieved.
      * 
      * @return the price of a pair on a given exchange.
+     * 
+     * @throws ExchangePairPriceException if an error occurs when retrieving the
+     *                                    price for the {@cpde pair}.
      */
-    BigDecimal getPriceForPair(Pair pair, Exchange exchange);
+    BigDecimal getPriceForPair(Pair pair, Exchange exchange) throws ExchangePairPriceException;
 
     /**
      * Pass orders and update their status.
@@ -43,6 +47,8 @@ public interface ForExchangeCommunication {
      * @param exchange The exchange to get the balance from.
      * 
      * @return {@link BigDecimal} The balance of the asset.
+     * 
+     * @throws Exception if something goes wrong.
      */
     BigDecimal getBalanceForAsset(Asset asset, Exchange exchange) throws Exception;
 

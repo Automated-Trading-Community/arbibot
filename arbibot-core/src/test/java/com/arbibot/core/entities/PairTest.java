@@ -7,8 +7,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.Test;
 
-import com.arbibot.core.exceptions.PairNullAssetException;
-import com.arbibot.core.exceptions.PairSameAssetException;
+import com.arbibot.core.exceptions.entities.pair.PairNullAssetException;
+import com.arbibot.core.exceptions.entities.pair.PairSameAssetException;
 
 public class PairTest {
 
