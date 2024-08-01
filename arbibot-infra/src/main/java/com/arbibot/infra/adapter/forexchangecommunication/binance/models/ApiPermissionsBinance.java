@@ -9,6 +9,13 @@ import lombok.ToString;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Getter
 @ToString
+/**
+ * TODO : doc.
+ * 
+ * @author SChoumiloff
+ * @author SebastienGuillemin
+ * @since 1.0
+ */
 public class ApiPermissionsBinance {
 
     @JsonProperty("ipRestrict")

@@ -8,6 +8,13 @@ import org.springframework.context.annotation.Configuration;
 import com.arbibot.core.ports.output.ForExchangeCommunication;
 import com.arbibot.core.usecases.arbitrage.TriangularArbitrage;
 
+/**
+ * TODO : doc + à déplacer ?
+ * 
+ * @author SChoumiloff
+ * @author SebastienGuillemin
+ * @since 1.0
+ */
 @Configuration
 @ComponentScan(basePackages = { "com.arbibot" })
 public class DependencyConfig {

@@ -14,6 +14,13 @@ import com.arbibot.core.entities.Pair;
 import com.arbibot.core.exceptions.TriangularArbitragingException;
 import com.arbibot.core.usecases.arbitrage.TriangularArbitrage;
 
+/**
+ * TODO : doc
+ * 
+ * @author SChoumiloff
+ * @author SebastienGuillemin
+ * @since 1.0
+ */
 @RestController
 public class TriangularArbitrageController {
     @Autowired

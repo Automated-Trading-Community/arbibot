@@ -15,7 +15,8 @@ import lombok.ToString;
  * 
  * @see com.binance.connector.client.WebSocketStreamClient#miniTickerStream
  * 
- * @author SChoumiloff SGuillemin
+ * @author SChoumiloff 
+ * @author SebastienGuillemin
  * @since 1.0
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -51,11 +52,13 @@ public class MiniTicker {
 
     /**
      * 
-     * cast to a BigDecimal value
+     * Cast to a BigDecimal value
      * 
-     * @return {@code BigDecimal}
+     * @return the claose price as a {@code BigDecimal}.
      */
     public BigDecimal getClosePrice() {
         return new BigDecimal(closePrice);
     }
+
+    // TODO : on fera les autres getters quand on en aura besoin ?
 }

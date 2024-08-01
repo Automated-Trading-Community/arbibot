@@ -7,6 +7,13 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Getter;
 
+/**
+ * TODO : doc
+ * 
+ * @author SChoumiloff
+ * @author SebastienGuillemin
+ * @since 1.0
+ */
 @Getter
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class PositionBinance extends UserDataEventBinance {

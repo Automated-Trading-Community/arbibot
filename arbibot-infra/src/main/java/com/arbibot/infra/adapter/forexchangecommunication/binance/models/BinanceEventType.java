@@ -2,6 +2,13 @@ package com.arbibot.infra.adapter.forexchangecommunication.binance.models;
 
 import lombok.Getter;
 
+/**
+ * TODO : doc
+ * 
+ * @author SChoumiloff
+ * @author SebastienGuillemin
+ * @since 1.0
+ */
 public enum BinanceEventType {
     EXECUTION_REPORT("executionReport"),
     OUTBOUND_ACCOUNT_POSITION("outboundAccountPosition");

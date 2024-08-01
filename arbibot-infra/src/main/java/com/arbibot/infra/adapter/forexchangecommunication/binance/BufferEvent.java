@@ -9,6 +9,10 @@ import java.util.List;
  * and all elements are shifted.
  *
  * @param <T> the type of elements held in this buffer
+ *
+ * @author SChoumiloff
+ * @author SebastienGuillemin
+ * @since 1.0
  */
 public class BufferEvent<T> {
     private final int capacity;

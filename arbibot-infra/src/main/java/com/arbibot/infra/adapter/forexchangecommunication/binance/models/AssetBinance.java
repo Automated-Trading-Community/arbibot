@@ -11,7 +11,8 @@ import lombok.ToString;
  * 
  * @see com.binance.connector.client.SpotClient
  * 
- * @author SChoumiloff SGuillemin
+ * @author SChoumiloff
+ * @author SebastienGuillemin
  * @since 1.0
  */
 @JsonIgnoreProperties(ignoreUnknown = true)

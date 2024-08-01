@@ -12,7 +12,8 @@ import lombok.Getter;
  * 
  * @see com.binance.connector.client.WebSocketStreamClient#listenUserStream
  * 
- * @author SChoumiloff SGuillemin
+ * @author SChoumiloff 
+ * @author SebastienGuillemin
  * @since 1.0
  */
 @Getter

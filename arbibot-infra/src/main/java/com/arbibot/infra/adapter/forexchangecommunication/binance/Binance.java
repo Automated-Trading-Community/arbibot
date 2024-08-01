@@ -43,6 +43,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.annotation.PostConstruct;
 
+/**
+ * TODO : doc
+ * 
+ * @author SChoumiloff
+ * @author SebastienGuillemin
+ * @since 1.0
+ */
 @Service
 public class Binance implements ForExchangeCommunication {
 
@@ -90,6 +97,8 @@ public class Binance implements ForExchangeCommunication {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
+
+        // TODO : pourquoi ne pas utiliser @Autowired ?
         this.wsClient = new WebSocketStreamClientImpl(DefaultUrls.WS_URL);
         this.manageWebSocketForUserEvent();
     }
@@ -99,17 +108,28 @@ public class Binance implements ForExchangeCommunication {
      *
      * @param pair     the pair for which to retrieve the price
      * @param exchange the Binance exchange instance
+     * 
+     *                 // TODO : cette exception n'est pas lancée. Oublie de
+     *                 suppression ou oublie de throw ?
      * @throws BinanceDeserializerException if there is an error deserializing the
      *                                      response from Binance
      */
     @Override
+    // TODO : le paramètre "exchange" n'est jamais utilisé. Je pense qu'il faut le
+    // virer de la signature dans l'interface (comme l'instance de
+    // 'ForExchangeCommunication' est liée à un exchange unique).
     public BigDecimal getPriceForPair(Pair pair, Exchange exchange) {
         try {
+            // TODO : pourquoi il y a une chaîne de caractères vide dans la ligne qui suit ?
             String symbol = pair.getBaseAsset() + "" + pair.getQuoteAsset();
             if (this.prices.containsKey(symbol)) {
                 pair.setPrice(this.prices.get(symbol));
             } else {
                 this.openWebSocketMiniTicker(pair);
+
+                // TODO : à voir si par la suite le "Thread.sleep(100)" ne pose pas de problème.
+                // Je ne sais pas si l'on est dans un contexte mono-thread ce qu impacterait le
+                // reste.
                 while (this.prices.get(symbol) == null) {
                     Thread.sleep(100);
                 }
@@ -127,7 +147,7 @@ public class Binance implements ForExchangeCommunication {
         Map<String, Object> parameters = BinanceOrderFactory.createOrderFromOrderObj(order);
         try {
             String result = this.clientSpot.createTrade().newOrder(parameters);
-            
+
         } catch (Exception e) {
 
         }
@@ -188,7 +208,9 @@ public class Binance implements ForExchangeCommunication {
      * @param pair
      */
     private void openWebSocketMiniTicker(Pair pair) {
+        // TODO : pourquoi il y a une chaîne de caractères vide dans la ligne qui suit ?
         String symbol = pair.getBaseAsset() + "" + pair.getQuoteAsset();
+
         int socketId = this.wsClient.miniTickerStream(symbol,
                 (messageOpenEvent) -> {
                     this.prices.put(symbol, null);
@@ -218,6 +240,8 @@ public class Binance implements ForExchangeCommunication {
      * all events are save in a {@code BufferEvent<UserDataEventBinance>}
      */
     private void manageWebSocketForUserEvent() {
+        // TODO : faut que je regarde avec toi cette fonction pour mieux comprendre.
+
         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
         Runnable task = () -> {
             try {
@@ -246,6 +270,9 @@ public class Binance implements ForExchangeCommunication {
 
     /**
      * Deserializes the given data into a MiniTicker object
+     * 
+     * TODO : du coup le nom de la méthode doit être
+     * "deserializeSymbolTickerBinance" ?
      * 
      * @param data
      * @return {@code MiniTicker}
@@ -283,6 +310,11 @@ public class Binance implements ForExchangeCommunication {
      * @throws BinanceWrongApiKeys          if the API keys are wrong or missing
      * @throws BinanceDeserializerException if there is an error during
      *                                      deserialization
+     * 
+     *                                      // TODO : il manque
+     *                                      'BinancePermissionApiKeysException' dans
+     *                                      la doc.
+     * 
      */
     private void verifyPermissions()
             throws BinanceWrongApiKeys, BinanceDeserializerException, BinancePermissionApiKeysException {

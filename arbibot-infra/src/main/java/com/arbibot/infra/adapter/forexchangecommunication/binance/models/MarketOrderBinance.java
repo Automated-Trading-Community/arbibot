@@ -8,6 +8,14 @@ import lombok.ToString;
 
 import java.util.List;
 
+
+/**
+ * TODO : doc
+ * 
+ * @author SChoumiloff
+ * @author SebastienGuillemin
+ * @since 1.0
+ */
 @Getter
 @ToString
 @JsonIgnoreProperties(ignoreUnknown = true)

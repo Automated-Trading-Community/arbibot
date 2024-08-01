@@ -12,7 +12,8 @@ import lombok.Data;
  * @see com.arbibot.infra.adapter.forexchangecommunication.binance.models.PositionBinance
  * @see com.arbibot.infra.adapter.forexchangecommunication.binance.models.Balance
  * 
- * @author SChoumiloff SGuillemin
+ * @author SChoumiloff
+ * @author SebastienGuillemin
  * @since 1.0
  */
 @Data
