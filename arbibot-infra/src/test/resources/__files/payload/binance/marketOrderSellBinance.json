@@ -1,0 +1,26 @@
+{
+    "symbol": "MATICUSDT",
+    "orderId": 3997445732,
+    "orderListId": -1,
+    "clientOrderId": "Aei7iJHr3ZGDqppw4BL8Xv",
+    "transactTime": 1722521021019,
+    "price": "0.00000000",
+    "origQty": "15.30000000",
+    "executedQty": "15.30000000",
+    "cummulativeQuoteQty": "7.64082000",
+    "status": "FILLED",
+    "timeInForce": "GTC",
+    "type": "MARKET",
+    "side": "SELL",
+    "workingTime": 1722521021019,
+    "fills": [
+        {
+            "price": "0.49940000",
+            "qty": "15.30000000",
+            "commission": "0.00764082",
+            "commissionAsset": "USDT",
+            "tradeId": 405297597
+        }
+    ],
+    "selfTradePreventionMode": "EXPIRE_MAKER"
+}

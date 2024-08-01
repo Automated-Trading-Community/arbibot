@@ -25,6 +25,7 @@ import com.arbibot.infra.adapter.forexchangecommunication.binance.exceptions.Bin
 import com.arbibot.infra.adapter.forexchangecommunication.binance.exceptions.BinancePermissionApiKeysException;
 import com.arbibot.infra.adapter.forexchangecommunication.binance.exceptions.BinanceWrongApiKeys;
 import com.arbibot.infra.adapter.forexchangecommunication.binance.factories.BinanceEventFactory;
+import com.arbibot.infra.adapter.forexchangecommunication.binance.factories.BinanceOrderFactory;
 import com.arbibot.infra.adapter.forexchangecommunication.binance.models.ApiPermissionsBinance;
 import com.arbibot.infra.adapter.forexchangecommunication.binance.models.AssetBinance;
 import com.arbibot.infra.adapter.forexchangecommunication.binance.models.MiniTicker;
@@ -122,15 +123,14 @@ public class Binance implements ForExchangeCommunication {
     }
 
     @Override
-    public void passOrders(Order[] orders) {
-        // TODO utiliser une websocket userEvents pour recevoir les infos sur les ordres
-        // executer en temps réel et passer les autres
-        // pour cela il faut générer une listen key avec la fonction private défini dans
-        // cette classe et ensuite se brancher sur la
-        // websocket listenUserStream. La websocket est a renouveller toutes les heures
-        // (60 minutes)
-        // use userEventList
-        throw new UnsupportedOperationException("Unimplemented method 'passOrders'");
+    public void passOrder(Order order) {
+        Map<String, Object> parameters = BinanceOrderFactory.createOrderFromOrderObj(order);
+        try {
+            String result = this.clientSpot.createTrade().newOrder(parameters);
+            
+        } catch (Exception e) {
+
+        }
     }
 
     /**

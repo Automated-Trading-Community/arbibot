@@ -3,6 +3,7 @@ package com.arbibot.infra.adapter.forexchangecommunication.binance.exceptions;
 /**
  * A {@code BinanceWrongApiKeys} is thrown when the Binance API keys are wrong
  * or missing.
+ * BinanceClientException codeError -1022
  *
  * @since 1.0
  * @author SChoumiloff SGuillemin

@@ -31,13 +31,21 @@ public interface ForExchangeCommunication {
      */
     BigDecimal getPriceForPair(Pair pair, Exchange exchange) throws ExchangePairPriceException;
 
+    // /**
+    // * Pass orders and update their status.
+    // *
+    // * @param orders the orders to pass.
+    // *
+    // */
+    // void passOrders(Order[] orders);
+
     /**
-     * Pass orders and update their status.
      * 
-     * @param orders the orders to pass.
+     * Pass an order and update its status.
      * 
+     * @param order
      */
-    void passOrders(Order[] orders);
+    void passOrder(Order order);
 
     /**
      * Retrieve the balance for a specific {@code asset} on a specific

@@ -90,4 +90,14 @@ public class Pair {
     public String toString() {
         return baseAsset.getName() + "/" + quoteAsset.getName() + (this.price != null ? " (" + this.price + ")" : "");
     }
+
+    /**
+     * Returns the symbol of the trading pair, which is the concatenation of the
+     * base asset and the quote asset.
+     *
+     * @return The symbol of the trading pair.
+     */
+    public String getSymbol() {
+        return this.getBaseAsset() + "" + this.getQuoteAsset();
+    }
 }

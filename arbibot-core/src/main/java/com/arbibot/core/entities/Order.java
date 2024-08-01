@@ -44,13 +44,14 @@ public class Order {
 
     private BigDecimal percentFees;
     private BigDecimal quantity;
-    
+
     @Setter
     private BigDecimal executedQuantity;
 
     /**
      * 
-     * By default the order's status is {@link com.arbibot.core.entities.OrderStatus#NOT_PASSED}
+     * By default the order's status is
+     * {@link com.arbibot.core.entities.OrderStatus#NOT_PASSED}
      * 
      * @param pair        the pair on which the order is taken.
      * @param type        Buy or Sell.
