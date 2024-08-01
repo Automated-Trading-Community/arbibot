@@ -46,7 +46,8 @@ public class TriangularArbitrage implements ForTriangularArbitraging {
     /**
      * @inheritDoc
      */
-    public Order[] performTriangualarArbitrage(Pair pair1, Pair pair2, Pair pair3, Exchange exchange, BigDecimal quantity)
+    public Order[] performTriangualarArbitrage(Pair pair1, Pair pair2, Pair pair3, Exchange exchange,
+            BigDecimal quantity)
             throws TriangularArbitragingException {
 
         if (this.validateTriangle(pair1, pair2, pair3)) {
@@ -61,9 +62,12 @@ public class TriangularArbitrage implements ForTriangularArbitraging {
             }
 
             // Check is the price are not null
-            if (pair1.getPrice() == null) throw new TriangularArbitragingException("Price of pair " + pair1 + " is null.");
-            if (pair2.getPrice() == null) throw new TriangularArbitragingException("Price of pair " + pair2 + " is null.");
-            if (pair3.getPrice() == null) throw new TriangularArbitragingException("Price of pair " + pair3 + " is null.");
+            if (pair1.getPrice() == null)
+                throw new TriangularArbitragingException("Price of pair " + pair1 + " is null.");
+            if (pair2.getPrice() == null)
+                throw new TriangularArbitragingException("Price of pair " + pair2 + " is null.");
+            if (pair3.getPrice() == null)
+                throw new TriangularArbitragingException("Price of pair " + pair3 + " is null.");
 
             // Comptute implied rate
             BigDecimal impliedRate = this.computeImpliedRate(pair2.getPrice(), pair3.getPrice());
@@ -79,9 +83,10 @@ public class TriangularArbitrage implements ForTriangularArbitraging {
                 // If (implied rate - fees) > pair 1 price then continue
                 if (impliedRate.subtract(fees).compareTo(pair1.getPrice()) > 0) {
                     this.passOrders(orders);
-                    
+
                     // BigDecimal variation = this.computeVaritation(pair1.getPrice(), impliedRate);
-                    // TODO : Ajouter une condition supplémentaire en mode si variation sup a 0.5 % alors
+                    // TODO : Ajouter une condition supplémentaire en mode si variation sup a 0.5 %
+                    // alors
                     // go
                 }
 
@@ -120,9 +125,9 @@ public class TriangularArbitrage implements ForTriangularArbitraging {
     /**
      * Creates an array of orders for executing a triangular arbitrage.
      *
-     * @param pair1       the first pair
-     * @param pair2       the second pair
-     * @param pair3       the third pair
+     * @param pair1    the first pair
+     * @param pair2    the second pair
+     * @param pair3    the third pair
      * @param exchange the exchange on which the orders are placed
      * @param quantity the quantity to be traded in the first order
      * @return an array of three orders forming the triangular arbitrage
@@ -159,7 +164,10 @@ public class TriangularArbitrage implements ForTriangularArbitraging {
      * @param orders the array of orders to be passed
      */
     private void passOrders(Order[] orders) {
-        this.forExchangeCommunication.passOrders(orders);
+        for (Order order : orders)
+            // TODO : envoyer/ne pas envoyer les ordres en fonction des codes de retours des
+            // ordres précédents
+            this.forExchangeCommunication.passOrder(order);
     }
 
     // private BigDecimal computeVaritation(BigDecimal initPrice, BigDecimal

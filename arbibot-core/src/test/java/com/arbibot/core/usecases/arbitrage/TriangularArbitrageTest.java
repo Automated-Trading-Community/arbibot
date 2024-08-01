@@ -41,9 +41,8 @@ public class TriangularArbitrageTest {
         }
 
         @Override
-        public void passOrders(Order[] orders) {
-            for (Order order : orders)
-                passedOrders.put(order.getPair(), order);
+        public void passOrder(Order order) {
+            passedOrders.put(order.getPair(), order);
         }
 
         public void setPrice(Pair pair, BigDecimal price) {
