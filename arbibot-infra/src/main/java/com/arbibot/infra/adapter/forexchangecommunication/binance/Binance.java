@@ -1,6 +1,5 @@
 package com.arbibot.infra.adapter.forexchangecommunication.binance;
 
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -8,11 +7,8 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.CompletableFuture;
 
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -24,12 +20,10 @@ import com.arbibot.core.ports.output.ForExchangeCommunication;
 import com.arbibot.infra.adapter.forexchangecommunication.binance.exceptions.BinanceDeserializerException;
 import com.arbibot.infra.adapter.forexchangecommunication.binance.exceptions.BinancePermissionApiKeysException;
 import com.arbibot.infra.adapter.forexchangecommunication.binance.exceptions.BinanceWrongApiKeys;
-import com.arbibot.infra.adapter.forexchangecommunication.binance.factories.BinanceEventFactory;
 import com.arbibot.infra.adapter.forexchangecommunication.binance.factories.BinanceOrderFactory;
 import com.arbibot.infra.adapter.forexchangecommunication.binance.models.ApiPermissionsBinance;
 import com.arbibot.infra.adapter.forexchangecommunication.binance.models.AssetBinance;
 import com.arbibot.infra.adapter.forexchangecommunication.binance.models.MiniTicker;
-import com.arbibot.infra.adapter.forexchangecommunication.binance.models.UserDataEventBinance;
 
 import com.binance.connector.client.SpotClient;
 import com.binance.connector.client.WebSocketStreamClient;
@@ -44,7 +38,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.PostConstruct;
 
 /**
- * TODO : doc
+ * Implementation of the ForExchangeCommunication interface for Binance
+ * Exchange.
  * 
  * @author SChoumiloff
  * @author SebastienGuillemin
@@ -55,10 +50,9 @@ public class Binance implements ForExchangeCommunication {
 
     private Map<String, BigDecimal> prices = new HashMap<>();
     private Map<String, Integer> sockets = new HashMap<>();
+    private Map<String, CompletableFuture<BigDecimal>> priceFutures = new HashMap<>();
     private SpotClient clientSpot;
     private WebSocketStreamClient wsClient;
-    private Integer socketUserStreamId = null;
-    private BufferEvent<UserDataEventBinance> userEvents;
 
     @Value("${binance.api.key:#{null}}")
     private String apiKEY;
@@ -80,27 +74,18 @@ public class Binance implements ForExchangeCommunication {
     @PostConstruct
     public void init() {
         if (this.apiKEY == null || this.apiSECRET == null) {
-            // TODO manage error
             return;
         }
         this.clientSpot = new SpotClientImpl(this.apiKEY, this.apiSECRET);
         try {
             this.verifyPermissions();
-            // TODO manage errors
-        } catch (BinanceWrongApiKeys e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (BinanceDeserializerException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (BinancePermissionApiKeysException e) {
-            // TODO Auto-generated catch block
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
         // TODO : pourquoi ne pas utiliser @Autowired ?
+        // INFO : comment tu veux faire ?
         this.wsClient = new WebSocketStreamClientImpl(DefaultUrls.WS_URL);
-        this.manageWebSocketForUserEvent();
     }
 
     /**
@@ -109,36 +94,22 @@ public class Binance implements ForExchangeCommunication {
      * @param pair     the pair for which to retrieve the price
      * @param exchange the Binance exchange instance
      * 
-     *                 // TODO : cette exception n'est pas lancée. Oublie de
-     *                 suppression ou oublie de throw ?
-     * @throws BinanceDeserializerException if there is an error deserializing the
-     *                                      response from Binance
      */
     @Override
-    // TODO : le paramètre "exchange" n'est jamais utilisé. Je pense qu'il faut le
-    // virer de la signature dans l'interface (comme l'instance de
-    // 'ForExchangeCommunication' est liée à un exchange unique).
-    public BigDecimal getPriceForPair(Pair pair, Exchange exchange) {
+    public void getPriceForPair(Pair pair) {
         try {
-            // TODO : pourquoi il y a une chaîne de caractères vide dans la ligne qui suit ?
-            String symbol = pair.getBaseAsset() + "" + pair.getQuoteAsset();
+            String symbol = pair.getSymbol();
             if (this.prices.containsKey(symbol)) {
                 pair.setPrice(this.prices.get(symbol));
             } else {
+                CompletableFuture<BigDecimal> future = new CompletableFuture<>();
+                this.priceFutures.put(symbol, future);
                 this.openWebSocketMiniTicker(pair);
-
-                // TODO : à voir si par la suite le "Thread.sleep(100)" ne pose pas de problème.
-                // Je ne sais pas si l'on est dans un contexte mono-thread ce qu impacterait le
-                // reste.
-                while (this.prices.get(symbol) == null) {
-                    Thread.sleep(100);
-                }
-                pair.setPrice(this.prices.get(symbol));
+                BigDecimal price = future.get();
+                pair.setPrice(price);
             }
-            return this.prices.get(symbol);
         } catch (Exception e) {
             e.printStackTrace();
-            return null;
         }
     }
 
@@ -149,7 +120,7 @@ public class Binance implements ForExchangeCommunication {
             String result = this.clientSpot.createTrade().newOrder(parameters);
 
         } catch (Exception e) {
-
+            e.printStackTrace();
         }
     }
 
@@ -208,77 +179,50 @@ public class Binance implements ForExchangeCommunication {
      * @param pair
      */
     private void openWebSocketMiniTicker(Pair pair) {
-        // TODO : pourquoi il y a une chaîne de caractères vide dans la ligne qui suit ?
-        String symbol = pair.getBaseAsset() + "" + pair.getQuoteAsset();
-
-        int socketId = this.wsClient.miniTickerStream(symbol,
+        // INFO seb j'ai gérer d'une manière différente pour ne pas stoppé l'execution
+        // avec un Thread.sleep()
+        // j'ai utiliser les CompletableFuture. c'est l'équivalent d'un wait() et
+        // notify() mais de manière plus simple.
+        // tant que symbol est a null alors on attend. La future est complété quand on
+        // recoit le message
+        int socketId = this.wsClient.miniTickerStream(pair.getSymbol(),
                 (messageOpenEvent) -> {
-                    this.prices.put(symbol, null);
+                    this.prices.put(pair.getSymbol(), null);
                 },
                 (messageEvent) -> {
                     MiniTicker ticker;
                     try {
-                        ticker = serializeSymbolTickerBinance(messageEvent);
-                        this.prices.replace(symbol, ticker.getClosePrice());
+                        ticker = deserializeSymbolTickerBinance(messageEvent);
+                        BigDecimal price = ticker.getClosePrice();
+                        this.prices.put(pair.getSymbol(), price);
+                        CompletableFuture<BigDecimal> future = this.priceFutures.remove(pair.getSymbol());
+                        if (future != null) {
+                            future.complete(price);
+                        }
                     } catch (BinanceDeserializerException e) {
                         e.printStackTrace();
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
                     }
                 },
                 null,
                 (code, reason) -> {
-                    this.sockets.remove(symbol);
-                    this.prices.remove(symbol);
+                    this.sockets.remove(pair.getSymbol());
+                    this.prices.remove(pair.getSymbol());
+                    this.wsClient.closeConnection(this.sockets.get(pair.getSymbol()));
                 },
                 null);
-        // TODO define onFailureCallback
-        this.sockets.put(symbol, socketId);
-    }
-
-    /**
-     * Manages the WebSocket connection for user events
-     * listenKey is updated each 60 minutes
-     * all events are save in a {@code BufferEvent<UserDataEventBinance>}
-     */
-    private void manageWebSocketForUserEvent() {
-        // TODO : faut que je regarde avec toi cette fonction pour mieux comprendre.
-
-        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-        Runnable task = () -> {
-            try {
-                if (this.socketUserStreamId != null) {
-                    this.wsClient.closeConnection(this.socketUserStreamId);
-                }
-                String key = this.generateListenKey();
-                this.socketUserStreamId = this.wsClient.listenUserStream(
-                        key,
-                        null,
-                        (event) -> {
-                            try {
-                                this.userEvents.add(BinanceEventFactory.createEvent(event));
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                        }, null, null, null);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        };
-        long initialDelay = 0;
-        long period = 60;
-        scheduler.scheduleAtFixedRate(task, initialDelay, period, TimeUnit.MINUTES);
+        this.sockets.put(pair.getSymbol(), socketId);
     }
 
     /**
      * Deserializes the given data into a MiniTicker object
      * 
-     * TODO : du coup le nom de la méthode doit être
-     * "deserializeSymbolTickerBinance" ?
-     * 
      * @param data
      * @return {@code MiniTicker}
      * @throws BinanceDeserializerException
      */
-    private MiniTicker serializeSymbolTickerBinance(String data) throws BinanceDeserializerException {
+    private MiniTicker deserializeSymbolTickerBinance(String data) throws BinanceDeserializerException {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             MiniTicker ticker = objectMapper.readValue(data, MiniTicker.class);
@@ -289,17 +233,6 @@ public class Binance implements ForExchangeCommunication {
     }
 
     /**
-     * 
-     * Generate a listenkey to be used in the websocket {@code listenUserStream}
-     * 
-     * @return {@code String}
-     */
-    private String generateListenKey() {
-        JSONObject obj = new JSONObject(clientSpot.createUserData().createListenKey());
-        return obj.getString("listenKey");
-    }
-
-    /**
      * Verifies the permissions of the Binance API keys by making a request to the
      * Binance API and checking the response.
      * If the response indicates that the API keys are wrong or missing, a
@@ -307,13 +240,12 @@ public class Binance implements ForExchangeCommunication {
      * If there is an error during the deserialization of the response, a
      * `BinanceDeserializerException` is thrown.
      *
-     * @throws BinanceWrongApiKeys          if the API keys are wrong or missing
-     * @throws BinanceDeserializerException if there is an error during
-     *                                      deserialization
-     * 
-     *                                      // TODO : il manque
-     *                                      'BinancePermissionApiKeysException' dans
-     *                                      la doc.
+     * @throws BinanceWrongApiKeys               if the API keys are wrong or
+     *                                           missing
+     * @throws BinanceDeserializerException      if there is an error during
+     *                                           deserialization
+     * @throws BinancePermissionApiKeysException if the API keys have insufficient
+     *                                           permissions
      * 
      */
     private void verifyPermissions()
@@ -329,9 +261,6 @@ public class Binance implements ForExchangeCommunication {
             } catch (JsonProcessingException jpe) {
                 throw new BinanceDeserializerException("error during deserialization on " + permissions);
             }
-            // } catch (BinanceWrongApiKeys bwak) {
-            // throw bwak;
-            // }
         } catch (BinanceClientException e) {
             if (e.getErrorCode() == -1022) {
                 throw new BinanceWrongApiKeys("Wrong or missing Binance API keys.");

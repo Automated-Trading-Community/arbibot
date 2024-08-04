@@ -21,15 +21,14 @@ public interface ForExchangeCommunication {
     /**
      * Retrieve the price for a {@code pair} on a specific {@code exchange}.
      * 
-     * @param pair     the pair whose price needs to be retrieve.
-     * @param exchange the exchange on which the price is retrieved.
+     * @param pair the pair whose price needs to be retrieve.
      * 
      * @return the price of a pair on a given exchange.
      * 
      * @throws ExchangePairPriceException if an error occurs when retrieving the
      *                                    price for the {@cpde pair}.
      */
-    BigDecimal getPriceForPair(Pair pair, Exchange exchange) throws ExchangePairPriceException;
+    void getPriceForPair(Pair pair) throws ExchangePairPriceException;
 
     // /**
     // * Pass orders and update their status.

@@ -98,6 +98,6 @@ public class Pair {
      * @return The symbol of the trading pair.
      */
     public String getSymbol() {
-        return this.getBaseAsset() + "" + this.getQuoteAsset();
+        return this.getBaseAsset().getName() + this.getQuoteAsset().getName();
     }
 }

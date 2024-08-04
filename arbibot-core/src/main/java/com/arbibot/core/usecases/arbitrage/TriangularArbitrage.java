@@ -53,9 +53,9 @@ public class TriangularArbitrage implements ForTriangularArbitraging {
         if (this.validateTriangle(pair1, pair2, pair3)) {
             try {
                 // Retrieve pairs price.
-                this.forExchangeCommunication.getPriceForPair(pair1, exchange);
-                this.forExchangeCommunication.getPriceForPair(pair2, exchange);
-                this.forExchangeCommunication.getPriceForPair(pair3, exchange);
+                this.forExchangeCommunication.getPriceForPair(pair1);
+                this.forExchangeCommunication.getPriceForPair(pair2);
+                this.forExchangeCommunication.getPriceForPair(pair3);
             } catch (ExchangePairPriceException e) {
                 e.printStackTrace();
                 return null;

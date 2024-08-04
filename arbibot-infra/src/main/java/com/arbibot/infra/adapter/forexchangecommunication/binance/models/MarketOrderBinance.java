@@ -8,9 +8,8 @@ import lombok.ToString;
 
 import java.util.List;
 
-
 /**
- * TODO : doc
+ * Stock market order response from Binance Exchange
  * 
  * @author SChoumiloff
  * @author SebastienGuillemin
@@ -72,7 +71,7 @@ public class MarketOrderBinance {
     @Getter
     @ToString
     @JsonIgnoreProperties(ignoreUnknown = true)
-    private class Fill {
+    public static class Fill {
         @JsonProperty("price")
         private String price;
 
